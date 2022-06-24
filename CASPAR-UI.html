@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
@@ -9,7 +9,7 @@
   <script src="https://www.puck-js.com/puck.js"></script>
   <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.css" />
 
 <style>
@@ -37,7 +37,7 @@
     .inrinp1{width: 17%; height:25px; font-size:12pt; border-width: 1px; padding:3px 8px;}
     .btminp{width: 30%; height:50%; font-size:12pt; border-width: 1px; padding:3px 8px; resize: none; display:inline;}
 
-  /* grids/layputs for each tab */
+  /* grids/layouts for each tab (1,2,3) */
   .container1 {display: grid;
   grid-template-columns: 0.75fr 0.75fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
   grid-template-rows: 1.1fr 1.1fr 1.1fr 1.1fr 1.1fr 1.1fr 0.4fr;
@@ -46,7 +46,7 @@
   .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px} /*left content */
   .div2-1 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px} /*middle content */
   .div3-1 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px} /*right content */
-  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px;} /*bottom content */
+  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px} /*bottom content */
 
   .container2 {display: grid;
   grid-template-columns: 0.75fr 0.75fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
@@ -56,7 +56,7 @@
   .div1-2 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px} /*left content */
   .div2-2 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px} /*middle content */
   .div3-2 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px} /*right content */
-  .div4-2 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px;} /*bottom content */
+  .div4-2 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px} /*bottom content */
 
   .container3 {display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -78,7 +78,7 @@
     .select-items {position: absolute; background-color: #b4b4b4; border-radius: 3px; top: 100%; left: 0; right: 0; z-index: 99;}
   .select-hide {display: none;} /*hide items when the select box is closed:*/
   .select-items div:hover, .same-as-selected {background-color: rgba(0, 0, 0, 0.1);}
-  .disable{pointer-events:none;}
+  .disable{pointer-events:none;} /* disables the ability to click on the dropdown menu */
 </style>
 </head>
 
@@ -87,7 +87,7 @@
   <div class="tab">
     <button class="tablinks" id = "tab1" onclick="show(event, 'tab1c')">Main</button>
     <button class="tablinks" id = "tab2" onclick="show(event, 'tab2c')">Run Summary</button>
-    <button class="tablinks" id = "tab3" onclick="show(event, 'tab3c')">Configuration</button> <!--Name Change-->
+    <button class="tablinks" id = "tab3" onclick="show(event, 'tab3c')">Configuration</button>
     <button id="help" style="float:right" onclick="help()"> Help </button>
     <button id="close" style = "float:right;" onclick = "closeConfirmation()"> Close Website </button>
     <button id="closeServer" style="float:right" onclick = "shutdownConfirmation()"> Shutdown Server (DO NOT PRESS) </button>
@@ -100,20 +100,20 @@
     <div class="container1">
       <div class="div1-1"  style = "text-align:center;">
         <p class="inrtxt2">Project Name:</p>
-        <input class = "inrinp" type="text" id="projName">
+        <input class = "inrinp" type="text" id="projName"> <!--Value Can Change-->
         <p class="inrtxt2">Operator:</p>
-        <input class = "inrinp" type="text" id="opName">
+        <input class = "inrinp" type="text" id="opName"> <!--Value Can Change-->
         <p class="inrtxt2">Experiment Name:</p>
-        <input class = "inrinp" type="text" id="expName">
+        <input class = "inrinp" type="text" id="expName"> <!--Value Can Change-->
         <p class="inrtxt2">Configurations:</p>
-        <div id = "dropdown" class="custom-select" style="width:93%; margin:0 auto; margin-bottom: 30px;">
-          <select style="text-align:left;">
+        <div id = "dropdown" class="custom-select" style="width:93%; margin:0 auto; margin-bottom: 30px;"> <!--Value Can Change-->
+          <select style="text-align:left;"> <!-- Eventually, this will be an array that will increase/decrease as needed -->
             <option value="0" id="none">&emsp;</option> <!-- blank line -->
-            <option value="1" id="V">V</option> <!--Change-->
-            <option value="2" id="W">W</option> <!--Change-->
-            <option value="3" id="X">X</option> <!--Change-->
-            <option value="4" id="Y">Y</option> <!--Change-->
-            <option value="5" id="Z">Z</option> <!--Change-->
+            <option value="1" id="V">V</option> <!--Changing will be implemented-->
+            <option value="2" id="W">W</option> <!--Changing will be implemented-->
+            <option value="3" id="X">X</option> <!--Changing will be implemented-->
+            <option value="4" id="Y">Y</option> <!--Changing will be implemented-->
+            <option value="5" id="Z">Z</option> <!--Changing will be implemented-->
           </select>
         </div>
       </div>
@@ -121,7 +121,8 @@
       <div class="div2-1" id="divPCR" style="width:100%; height:100%; display:block;"></div> <!--graph goes here-->
 
       <div class="div3-1">
-        <button class="inrbtn" id="startStopPCR" onclick = "startStopConfirmation()"; style = "font-size: 160%; padding: 20px; margin: 80px auto; background-color: LimeGreen">Start PCR</button> <!--Changes-->
+        <button class="inrbtn" id="startStopPCR" onclick = "startStopConfirmation()"
+          style = "font-size: 160%; padding: 20px; margin: 80px auto; background-color: LimeGreen">Start PCR</button> <!--Changes-->
         <p class="inrtxt">Current Cycle:</p>
         <p class="inrtxt" id="currentCycle" style="font-weight:bold; font-size:120%; margin-bottom:48px;"> 0 </p> <!--Changes-->
         <p class="inrtxt">Total Cycles:</p>
@@ -130,7 +131,7 @@
 
       <div class="div4-1">
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; margin-left:20px;"> <br> Comments:</p>
-        <textarea class = "btminp" type="text" id="comments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
+        <textarea class = "btminp" id="comments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea> <!--Value Can Change-->
         <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:55px;"> <br> System Status:
           <br> <br> <span style= "font-weight: bold; font-size:110%;"> &ensp;Not Running </span></p> <!--Changes-->
         <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:55px;"> <br> Start Time:
@@ -138,7 +139,7 @@
         <p class="inrtxt3" id="estFinTime" style="display:inline; float:left; font-size:110%; margin-left:55px;"> <br> Est. Finish Time:
           <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp; &emsp; &ensp; - </span></p> <!--Changing will be implemented-->
         <p class="inrtxt3" id="finTime" style="display:inline; float:left; font-size:110%; margin-left:55px;"> <br> Finish Time:
-          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp; &emsp; - </span></p> <!--Changing will be implemented-->
+          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp; &emsp; - </span></p> <!--Changes-->
       </div>
 
     </div>
@@ -150,10 +151,11 @@
       <div class="div1-2">
         <p class="inrtxt4" style="font-weight:bold; text-align: center; margin-top: 20px;">Experiment Info:</p>
         <p class="inrtxt3" id="errorMessages" style="font-size:105%;"> Status: Not Completed <br> <br> Errors: Check Error Status <br> <br> Configuration: X
-          <br> <br> Project Name: Pigs <br> <br> Start Time: 9:00:00 AM <br> <br> Est. Finish Time: 10:00:00 AM <br> <br> Finish Time: 11:00:00 AM </p>  <!--Changing will be implemented-->
+          <br> <br> Project Name: Pigs <br> <br> Start Time: 9:00:00 AM <br> <br> Est. Finish Time: 10:00:00 AM <br> <br>
+            Finish Time: 11:00:00 AM </p>  <!--Changing will be implemented-->
       </div>
 
-      <div class="div2-2" id="graphDiv" style="width:100%; height:100%; display:block;"> </div> <!--graph goes here-->
+      <div class="div2-2" id="divCYC" style="width:100%; height:100%; display:block;"> </div> <!--graph goes here-->
 
       <div class="div3-2">
         <p class="inrtxt4" style="font-weight:bold; text-align: center; margin-top: 20px;">Error Status:</p>
@@ -162,10 +164,10 @@
 
       <div class="div4-2">
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; margin-left:20px;"> Save Data Filename:</p>
-        <input class = "inrinp1" type="text" id="filename" style="display:inline-flex; margin-top: 40px; float:left;" value=""></input>
+        <input class = "inrinp1" type="text" id="filename" style="display:inline-flex; margin-top: 40px; float:left;" value=""> <!--Value Can Change-->
         <button class="inrbtn2" id="downloadData" style = "display:inline; margin-top: 28px; margin-left:55px; float:left; margin-bottom: 10px;"> Download Data </button>
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; margin-left:45px;"> Enter Email:</p>
-        <input class = "inrinp1" type="text" id="email" style="display:inline-flex; margin-top: 40px; float:left;" value=""></input>
+        <input class = "inrinp1" type="text" id="email" style="display:inline-flex; margin-top: 40px; float:left;" value="">
         <button class="inrbtn2" id="emailData" onclick = "sendFiles()" style = "display:inline; margin-top: 28px; margin-left:55px; float:left; margin-bottom: 10px;">
           Email Data </button>
       </div>
@@ -196,17 +198,17 @@
     </div>
   </div>
 
-  <script type="text/javascript">
-    const ws = new WebSocket('ws://10.68.206.224:7071/ws');
+  <script>
+    const ws = new WebSocket('ws://10.68.206.224:7071/ws'); //Address can change
 
+    //We will start by declaring major variables
     //Declare data vectors for graphs and push initial values into them.
     var data = [];
     var data2 = [];
     var cycleno = 0;             // Cycle the next set of PCR data will be from.
     var t = new Date();         // Current time.
     data.push([t, 0, 0]);
-    data2.push([cycleno, 0, 0]);
-
+    data2.push([cycleno, 0, 0, 0]);
     var taxis_increment = 10 * 1000; // axis increment in milliseconds
 
     // Initialize variables for data handling.
@@ -218,97 +220,43 @@
     var date_win_min = t.getTime();
     var date_win_max = date_win_min + 2*taxis_increment;
 
-    var isRunning = false; //Keeps track of whether the system is actually running. NOT the same as clientStarted, which is when the client presses start
-
-    // Handles the events coming from the websocket. Format switches off the id blank on the json variable being sent.
-    ws.onmessage = function(event){
-      var msg = JSON.parse(event.data);
-        switch(msg.id){
-
-          case "connect":
-            isRunning = msg.running;
-            console.log(msg.status);
-              document.getElementById('serverStatus').innerHTML =  "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>"; //Changes Server Status
-            //alert(isRunning);
-            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename);
-
-            if (isRunning == "true")
-            {
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-              + "In Progress" + "</span>";
-            }
-            else if(isRunning == "false")
-            {
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-              + "Not Running" + "</span>";
-            }
-
-          break;
-
-          case "cycledata":
-            isRunning = msg.running;
-            x = new Date();  // Get current time
-            y = msg.fluor; // Get fluoresence.
-            temp = msg.temp; // Get temperature.
-          //Move the window if needed:
-            if (x.getTime() >= date_win_max) {
-              date_win_min += taxis_increment;
-              date_win_max += taxis_increment;
-              g.updateOptions( { dateWindow : [date_win_min, date_win_max] } )};
-          //Update the data, then graph it.
-            if(y > -100)
-              {data.push([x,y,temp]);
-               g.updateOptions( { 'file': data } );};
-
-               if (isRunning == "true")
-               {
-                 document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-                 + "In Progress" + "</span>";
-               }
-               else if(isRunning == "false")
-               {
-                 document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-                 + "Not Running" + "</span>";
-               }
-          break;
-
-          case "PCRdata": //In the future, msg.cycleno will give us the real cycleno
-            isRunning = msg.running;
-            cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data.
-              document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleno + "</span>"; //Changes Cycle Number
-            fam = msg.fam; //Retrieve FAM fluoresence.
-            cy5 = msg.cy5; //Retrieve Cy5 fluoresence.
-            data2.push([cycleno, fam, cy5]); //Push the new data onto the graph source.
-            pcr.updateOptions( {'file': data2 } ); //Update it.
-
-            if (isRunning == "true")
-            {
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-              + "In Progress" + "</span>";
-            }
-            else if(isRunning == "false")
-            {
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-              + "Not Running" + "</span>";
-            }
-          break;
-
-          default:
-            console.log(msg); //If the message doesn't match any of our cases, log the message in the console.
-          }};
+    // Declare the graph for PCR data.
+    var pcr = new Dygraph(document.getElementById("divPCR"), data2,
+      {labels: ['Cycle','FAM','HEX','Cy5'],
+       series: {
+         'FAM': {
+          axis:'y1'},
+         'HEX': {
+          axis:'y1'},
+         'Cy5': {
+          axis:'y1'},
+          },
+          axes: {
+            'y1': {},
+          },
+          title: 'PCR Output',
+          xlabel: 'Cycle',
+          ylabel: 'Fluoresence (mV)',
+          drawPoints: true,
+          showRoller: true,
+          digitsAfterDecimal: 3,
+          dateWindow: [0,40], //This locks the x axis to 0-40.
+          showRangeSelector: true,
+          axisLabelFontSize: 14,
+    });
 
     // Declare our graph for cycling data.
-    var g = new Dygraph(document.getElementById("graphDiv"), data,
+    var cyc = new Dygraph(document.getElementById("divCYC"), data,
       {labels: ['Time','F','Temp'],
        series: {
           'F': {
-            axis:'y1'}, // Put our fluoresence on the left axis.
+          axis:'y1'}, // Put our fluoresence on the left axis.
           'Temp': {
-            axis:'y2'}, // Put our temperature on the right axis.
+          axis:'y2'}, // Put our temperature on the right axis.
           },
           axes: { // Declare two sets of axes.
-                'y1': {},
-                'y2': {},
+            'y1': {},
+            'y2': {},
           },
           title: 'Cycling Information',
           xlabel: 'Time',
@@ -322,65 +270,102 @@
           axisLabelFontSize: 12,
     });
 
-    // Declare the graph for PCR data.
-    var pcr = new Dygraph(document.getElementById("divPCR"), data2,
-      {labels: ['Cycle','FAM','Cy5'],
-       series: {
-         'FAM': {
-          axis:'y1'},
-         'HEX': {
-          axis:'y1'},
-          },
-          axes: {
-                'y1': {},
-          },
-          title: 'PCR Output',
-          xlabel: 'Cycle',
-          ylabel: 'Fluoresence (mV)',
-          drawPoints: true,
-          showRoller: true,
-          digitsAfterDecimal: 3,
-          dateWindow: [0,40], //This locks the x axis to 0-40.
-          showRangeSelector: true,
-          axisLabelFontSize: 14,
-    });
+    var isRunning = false; //Keeps track of whether the system is actually running. NOT the same as clientStarted, which is when the client presses start
+
+    // Handles the events coming from the websocket. Format switches off the id blank on the json variable being sent.
+    ws.onmessage = function(event){
+      var msg = JSON.parse(event.data);
+        switch(msg.id){
+
+          case "connect":
+            isRunning = msg.running;
+            console.log(msg.status);
+              document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
+              //Changes Server Status
+            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename);
+
+            //Changes the System Status based on the isRunning variable
+            if (isRunning == "true"){
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+              + "In Progress" + "</span>";}
+            else if(isRunning == "false"){
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+              + "Not Running" + "</span>";}
+          break;
+
+          case "PCRdata": //In the future, msg.cycleno will give us the real cycleno
+            isRunning = msg.running;
+            cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data.
+              document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleno + "</span>"; //Changes Cycle Number
+            fam = msg.fam; //Retrieve FAM fluoresence.
+            cy5 = msg.cy5; //Retrieve Cy5 fluoresence.
+            hex = msg.hex; //Retrieve HEX fluoresence.
+            data2.push([cycleno, fam, hex, cy5]); //Push the new data onto the graph source.
+            pcr.updateOptions( {'file': data2 } ); //Update it.
+
+              //Changes the System Status based on the isRunning variable
+              if (isRunning == "true"){
+                document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+                  + "In Progress" + "</span>";}
+              else if(isRunning == "false"){
+                document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+                  + "Not Running" + "</span>";}
+          break;
+
+          case "cycledata":
+            isRunning = msg.running;
+            x = new Date();  // Get current time
+            y = msg.fluor; // Get fluoresence.
+            temp = msg.temp; // Get temperature.
+          //Move the window if needed:
+            if (x.getTime() >= date_win_max) {
+              date_win_min += taxis_increment;
+              date_win_max += taxis_increment;
+              cyc.updateOptions( { dateWindow : [date_win_min, date_win_max] } )};
+          //Update the data, then graph it.
+            if(y > -100)
+              {data.push([x,y,temp]);
+               cyc.updateOptions( { 'file': data } );};
+
+            //Changes the System Status based on the isRunning variable
+            if (isRunning == "true"){
+               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+               + "In Progress" + "</span>";}
+            else if(isRunning == "false"){
+               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+               + "Not Running" + "</span>";}
+          break;
+
+          default:
+            console.log(msg); //If the message doesn't match any of our cases, log the message in the console.
+          }};
 
 //Functions Begin
 
-      function onConnect(run, start, project, operator, experiment, config, comments, filename)
-     {
-       if(run == "true")
-       {document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
-       start.bold() + "</span>";
-       document.getElementById("projName").value = project;
-       document.getElementById("opName").value = operator;
-       document.getElementById('expName').value = experiment;
-       document.getElementById('comments').value = comments;
-       document.getElementById('filename').value = filename;
-       a.innerHTML = config;
-
-       document.getElementById('projName').disabled = true;
-       document.getElementById('opName').disabled = true;
-       document.getElementById('expName').disabled = true;
-       document.getElementById("dropdown").style.pointerEvents = "none";
-         document.getElementById("dropdown").style.opacity = "0.6";
-       document.getElementById('filename').disabled = true;
-
-       document.getElementById('startStopPCR').innerHTML = "Stop PCR";
-       document.getElementById('startStopPCR').style.backgroundColor = 'Tomato';
-       clientPressedStart = true;
-        }
-       }
-
-       var timeFinishDisplay;
-       function runFinished() {
-
-         var timeFinished = new Date(); //initialize Start Time
-         timeFinishDisplay = timeFinished.toLocaleTimeString();
-         document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;" +
-         timeFinishDisplay.bold() + "</span>";
-
-
+      //Updates the UI when it connects, whether in the middle of an experiment or initially.
+      function onConnect(run, start, project, operator, experiment, config, comments, filename){
+        if(run == "true"){
+          //Updates all values
+          document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
+          start.bold() + "</span>";
+          document.getElementById("projName").value = project;
+          document.getElementById("opName").value = operator;
+          document.getElementById('expName').value = experiment;
+          document.getElementById('comments').value = comments;
+          document.getElementById('filename').value = filename;
+          a.innerHTML = config;
+          //Disables inputs
+          document.getElementById('projName').disabled = true;
+          document.getElementById('opName').disabled = true;
+          document.getElementById('expName').disabled = true;
+          document.getElementById("dropdown").style.pointerEvents = "none";
+           document.getElementById("dropdown").style.opacity = "0.6";
+          document.getElementById('filename').disabled = true;
+         //Changes start/stop button
+          document.getElementById('startStopPCR').innerHTML = "Stop PCR";
+          document.getElementById('startStopPCR').style.backgroundColor = 'Tomato';
+          clientPressedStart = true;
+          }
        }
 
       //Checks if project name, operator name, and configuration are filled out before run can begin
@@ -394,16 +379,17 @@
           return false;}
 
         else if ((String(a.innerHTML).trim().length == 0)) {
-          alert("\nPlease pick a Configuration.");
+          alert("\nPlease select/create a Configuration.");
           return false;}
 
-        else{return true;}
+        else {return true;}
       }
 
       //These variables ensure that the same file name isn't used for two runs in a row
       var oldFileName;
       var newFileName = " ";
-      var clientPressedStart = false; // Keeps Track of if the client pressed start.
+      var clientPressedStart = false; // Keeps Track of if the client pressed start. NOT the same as isRunning, which tracks whether or not the sysem is on.
+
       //opens a window prompt to confirm whether the user wants to start the program
       function startStopConfirmation() {
          if(conditionsForStart()) { //function only runs if true;
@@ -413,16 +399,17 @@
                 //Sets the file name to display if there is no file name entered or if old and new file names match
                 if (String(document.getElementById("filename").value).trim().length == 0 || oldFileName == newFileName) {
                   var nameOfProject = document.getElementById("projName").value;
-                  var date = ("0" + (timeStarted1.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted1.getDate().toString()).slice(-2)  + "-" + timeStarted1.getFullYear().toString().slice(-2);
+                  var date = ("0" + (timeStarted1.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted1.getDate().toString()).slice(-2)  + "-" +
+                    timeStarted1.getFullYear().toString().slice(-2);
                   var time = ("0" + timeStarted1.getHours()).slice(-2)  + "." +  ("0" + timeStarted1.getMinutes()).slice(-2);
                   var dateTime = date+ "_" + time;
                   displayFileName1 = nameOfProject + "_" + dateTime;
                   }
-                else{displayFileName1 = document.getElementById("filename").value;
+                else {displayFileName1 = document.getElementById("filename").value;
                   }
               let text = "Are you sure you want to start this PCR?\n\nAll previous data will be cleared and you will be starting this experiment with the following parameters:\n\n" +
-              "Save Data Filename: " + displayFileName1  + "\nOperator Name: " + document.getElementById("opName").value + "\nExperiment Name: " + document.getElementById("expName").value +
-              "\nConfiguration: " + a.innerHTML + "\n\nPress 'OK' to confirm.";
+                "Save Data Filename: " + displayFileName1  + "\nOperator Name: " + document.getElementById("opName").value + "\nExperiment Name: " +
+                document.getElementById("expName").value + "\nConfiguration: " + a.innerHTML + "\n\nPress 'OK' to confirm.";
                 if (confirm(text) == true) {
                   //Changes Button and System Status
                   document.getElementById('startStopPCR').innerHTML = "Stop PCR";
@@ -438,8 +425,7 @@
                   document.getElementById('startStopPCR').innerHTML = "Start PCR";
                     document.getElementById('startStopPCR').style.backgroundColor = 'LimeGreen';
                   clientPressedStart = false;
-                  startStopPCR();
-                  runFinished();}
+                  startStopPCR();}
                 else{}
             }
           }
@@ -447,6 +433,7 @@
 
     var timeStartDisplay; //Important if we ever want to send it
     var defaultFileName; //Important if we ever want to send it
+
     // Start or stop the PCR depending on its current state.
     function startStopPCR() {
       if (clientPressedStart){ //Changes the file name between runs if its the exact same
@@ -464,7 +451,8 @@
           if (String(document.getElementById("filename").value).trim().length == 0){
             var nameOfProject = document.getElementById("projName").value;
             //alert(nameOfProject)
-            var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" + timeStarted.getFullYear().toString().slice(-2);
+            var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" +
+              timeStarted.getFullYear().toString().slice(-2);
             //alert(date);
             var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
             var dateTime = date+ "_" + time;
@@ -488,15 +476,17 @@
           t = new Date();
             date_win_min = t.getTime();
             date_win_max = date_win_min + 2*taxis_increment;
-            g.updateOptions( { dateWindow : [date_win_min, date_win_max] } );
+            cyc.updateOptions( { dateWindow : [date_win_min, date_win_max] } );
           data.push([t, 0, 0]);
-          data2.push([cycleno, 0, 0]);
-          g.updateOptions({ 'file': data});
+          data2.push([cycleno, 0, 0, 0]);
+          cyc.updateOptions({ 'file': data});
           pcr.updateOptions({ 'file': data2});
 
           changeFile();
           clientPressedStart = false;
-          var msg = {
+
+          //Sends important data to server for storage (safety reasons incase client leaves)
+          let msg = {
             id: "startSave",
             startTime: timeStartDisplay,
             projectName: document.getElementById("projName").value,
@@ -506,7 +496,7 @@
             comments: document.getElementById('comments').value,
             filename: document.getElementById('filename').value
           };
-          ws.send(JSON.stringify(msg)); //sends message, finally
+          ws.send(JSON.stringify(msg)); //sends message
 
       }
       else{
@@ -519,15 +509,25 @@
         document.getElementById('filename').disabled = false;
         oldFileName = newFileName; //for storing purposes
         clientPressedStart = true;
-      }
+        runFinished();
+        }
       var msg = {
-        id: "start/stop"
+        id: "start/stop",
       };
-      ws.send(JSON.stringify(msg)); //sends message, finally
+      ws.send(JSON.stringify(msg)); //sends message
     }
 
-      //Changes files based off the textbox on the page and sends the name to the server. The server will reject the request if it's running.
-      // Need to make something that tells the user that the server has rejected the request
+    var timeFinishDisplay; //Important if we ever want to send it
+
+    //This function is called if the client manually presses stop or if the experiment manually ends
+    function runFinished() {
+      var timeFinished = new Date(); //initialize Start Time
+      timeFinishDisplay = timeFinished.toLocaleTimeString();
+      document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;" +
+      timeFinishDisplay.bold() + "</span>";
+    }
+
+      //Changes file name based off the textbox on the page and sends the name to the server.
       //This Function should run prior to the actual start. Never called on outside of a function.
       function changeFile()
         {var nameforchange = document.getElementById("filename").value;
@@ -536,12 +536,12 @@
             newname: nameforchange};
           ws.send(JSON.stringify(msg));}
 
-      // Need to implement this feature that will send the files to the chosen address --> Should be error prone.
+      //Need to implement this feature that will send the files to the chosen address --> Should be error prone.
       //Currently Emails the files to Nick
       //This function should only be called when Email Data is pressed.
       function sendFiles() {
         if((String(document.getElementById("email").value).trim().length == 0) || ((!String(document.getElementById("email").value).trim().includes("@")))){
-          alert("Please enter a valid email address")
+          alert("Please enter a valid email address");
         }
         else{
           var msg = {
@@ -550,18 +550,11 @@
         }
       }
 
-      //Need to implement a function that calculates the Estimated Finish Time
-      function estFinishTime(data)
-      {return "Calculating..."}
-
-      //Need to implement a feature that download data
-      function downloadData(){}
-
       //opens a window prompt to confirm whether the user meant to close the website
       function closeConfirmation() {
         let text = "\nAre you sure you want to close this website?\n\n If currently running, the machine will continue to run.\n\nPress 'OK' to confirm.";
         if (confirm(text) == true) {
-          window.close(); //Add more things to this function, in the future.
+          window.close();
         } else {}
         }
 
@@ -587,9 +580,18 @@
         window.open("https://my.vanderbilt.edu/haseltonlab/");
       }
 
+      //Need to implement a function that calculates the Estimated Finish Time
+      function estFinishTime(data)
+      {return "Calculating...";}
+
+      //Need to implement a feature that downloads data --> Should be error prone.
+      //This function should only be called when Download Data is pressed.
+      function downloadData(){}
+
 //Functions End
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+//There is a line seperating this code below because it shouldn't really be changed.
 
 // Code for the tabs starts
       function show(evt, contentid) { //Shows content tabs when tabs are clicked
@@ -626,13 +628,13 @@
         b = document.createElement("DIV");
         b.setAttribute("class", "select-items select-hide");
 
-        for (j = 0 ; j < ll; j++) {
+        for (j = 1 ; j < ll; j++) {
 
           /*for each option in the original select element,
           creates a new DIV that will act as an option item:*/
           c = document.createElement("DIV");
           c.innerHTML = selElmnt.options[j].innerHTML;
-          c.addEventListener("click", function(e) {
+          c.addEventListener("click", function(e){
 
               /*when an item is clicked, updates the original select box,
               and the selected item:*/
@@ -676,7 +678,7 @@
         yl = y.length;
         for (i = 0; i < yl; i++) {
           if (elmnt == y[i]) {
-            arrNo.push(i)
+            arrNo.push(i);
           } else {y[i].classList.remove("select-arrow-active");}
         }
         for (i = 0; i < xl; i++) {
@@ -691,7 +693,7 @@
 // Code for the dropdown on the first page ends
 
   // Safety Feature if someone accidently refreshes or leaves the page
-  window.onbeforeunload = function() {
+  window.onbeforeunload = function leaving() {
     return "Are you sure you want to leave this page?";};
 
   </script>
