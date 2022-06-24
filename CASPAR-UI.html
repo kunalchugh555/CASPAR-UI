@@ -88,6 +88,7 @@
     <button class="tablinks" id = "tab3" onclick="show(event, 'tab3c')">Configure</button>
     <button id="help" style="float:right"> Help </button>
     <button id="closeServer" style="float:right" onclick = "shutdownConfirmation()"> Shutdown Server (DO NOT PRESS) </button>
+    <button id="serverStatus" style="float:right; pointer-events: none;" > Server Status: <span style = "color:#48c531;font-weight:bold;"> Connected </span> </button>
   </div>
 
   <div id="divider" style="width:1200px; height:8px; margin: auto;"></div>
@@ -115,7 +116,7 @@
         </div>
       </div>
 
-      <div class="div2-1" id="graphDiv" style="width:100%; height:100%; display:block!important;"></div> <!--graph goes here-->
+      <div class="div2-1" id="divPCR" style="width:100%; height:100%; display:block!important;"></div> <!--graph goes here-->
 
       <div class="div3-1">
         <button class="inrbtn" id="startPCR" onclick = "startPCR()"> Start PCR </button>
@@ -127,8 +128,8 @@
       </div>
 
       <div class="div4-1">
-        <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; ">Operator <br> <br> Comments:</p>
-        <textarea class = "btminp" id="operatorComments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
+        <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; "> <br> Comments:</p>
+        <textarea class = "btminp" id="comments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
         <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> System Status:
           <br> <br> <span style= "font-weight: bold; font-size:110%;"> &ensp;Not Running </span></p> <!--will be changed-->
         <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Start Time:
@@ -136,7 +137,7 @@
         <p class="inrtxt3" id="estFinTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Est. Finish Time:
           <br> <br> <span style= "font-weight: bold; font-size:110%"> &ensp; - </span></p> <!--will be changed-->
         <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
-          "quitConfirmation()"> Quit Program </button>
+          "quitConfirmation()"> Close Website </button>
       </div>
 
     </div>
@@ -154,14 +155,14 @@
         <p class="inrtxt5" id="versionInfo">&emsp;Version 1.0</p> <!-- Can be changed -->
       </div>
 
-      <div class="div2-2" id="divPCR" style="width:100%; height:100%; display:block!important;"> </div> <!--graph goes here-->
+      <div class="div2-2" id="graphDiv" style="width:100%; height:100%; display:block!important;"> </div> <!--graph goes here-->
 
       <div class="div3-2" style = "text-align:center;">
         <p class="inrtxt4"  style = "margin-bottom: 30px;">Save Data Filename:</p>
-        <input class = "inrinp" id="filename" value="projName_Date_Time"> <!-- Can be changed -->
+        <input class = "inrinp" id="filename" value="projName_Date_Time"> <!-- Will be changed -->
         <p class="inrtxt4" style = "margin-bottom: 25px;">Enter Email:</p>
         <input class = "inrinp" id="email" style = "margin-bottom: 20px; font-size:11pt;">
-        <button class="inrbtn2" id="emailData" style = "margin-top: 10px; margin-bottom: 60px; padding:8px; font-size:115%">
+        <button class="inrbtn2" id="emailData" onclick = "sendFiles()" style = "margin-top: 10px; margin-bottom: 60px; padding:8px; font-size:115%">
           Email Data </button>
         <button class="inrbtn2" id="downloadData" style = "margin-top: 73px; padding:16px; font-size:125%"> Download Data </button>
       </div>
@@ -178,7 +179,7 @@
         <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Run Status:
           <br> <br> <span style= "font-weight: bold; font-size:110%;"> &emsp;Completed </span></p> <!--can be changed-->
         <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
-          "quitConfirmation()"> Quit Program </button>
+          "quitConfirmation()"> Close Website </button>
       </div>
 
     </div>
@@ -321,38 +322,42 @@
     //Starts PCR. Changes System Status.
 
     function startPCR()
-    {
-      if(started)
+    {if(started)
       {}
       else {started = true;
         document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:#48c531;font-weight:bold;> &ensp;"
         + "In Progress" + "</span>";
-        startStopPCR();
-
+        startStopPCR();}
       }
-    }
 
     //Stops PCR. Changes System Status.
     function stopPCR()
-    {
-      if (started)
+    {if (started)
       {started = false;
         document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
         + "Not Running" + "</span>";
-      startStopPCR();
-     }
+      startStopPCR();}
       else {}
     }
 
-    var timeStarted; //initialize Start Time variable
+    var timeStartDisplay;
     var firstPress=true; //Start Time display conditional
     // Start or stop the PCR depending on its current state.
     function startStopPCR() {
       if (firstPress)
       {
-        timeStarted = t.toLocaleTimeString();
+        var timeStarted = new Date(); //initialize Start Time variable
+        timeStartDisplay = timeStarted.toLocaleTimeString();
         document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
-        timeStarted.bold() + "</span>";
+        timeStartDisplay.bold() + "</span>";
+        //This code alters the default file name. Not Sure if it belongs here.
+          var nameOfProject = document.getElementById("projName").value;
+          //alert(nameOfProject)
+          var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" + timeStarted.getFullYear().toString().slice(-2);
+          //alert(date);
+          var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
+          var dateTime = date+ "_" + time;
+          document.getElementById('filename').value = nameOfProject + "_" + dateTime;
         firstPress = false;
       }
       //alert("Machine Started/Stopped");
@@ -360,14 +365,28 @@
         id: "start/stop"};
       ws.send(JSON.stringify(msg));}
 
-    //Changes files based off the textbox on the page and sends the name to the server. The server will reject the request if it's running.
-    // This Function should run only inside other functions
-    function changeFile()
-      {var nameforchange = document.getElementById("filename").value;
-        var msg = {
-          id: "filename",
-          newname: nameforchange};
-        ws.send(JSON.stringify(msg));}
+      //Changes files based off the textbox on the page and sends the name to the server. The server will reject the request if it's running.
+      // This Function should run only inside other functions
+      function changeFile()
+        {var nameforchange = document.getElementById("filename").value;
+          var msg = {
+            id: "filename",
+            newname: nameforchange};
+            //alert("This Works.");
+          ws.send(JSON.stringify(msg));}
+
+    // Rewriting this to email the files to a chosen address. --> Bruh idk how to implement. Ask Nick
+    function sendFiles() { // Change to email the files to a chosen address
+      //alert("This Works!");
+      changeFile();
+      alert("This Feature is Working.");
+      var msg = {
+        id: "sendemail"};
+      ws.send(JSON.stringify(msg));}
+
+    function downloadData(){
+
+    }
 
     //Turns the server off. Don't call this. Really don't.
     function stopServer() {
@@ -376,15 +395,9 @@
         id: "shutdown"};
       ws.send(JSON.stringify(msg));}
 
-    // Rewriting this to email the files to a chosen address.
-    // function sendFiles() { // Change to email the files to a chosen address
-    //  var msg = {
-    //    id: "sendemail"};
-    //  ws.send(JSON.stringify(msg));}
-
     //opens a window prompt to confirm whether the user meant to quit the program.
     function quitConfirmation() {
-      let text = "Are you sure you want to quit this program?\n\nPress 'OK' to confirm.";
+      let text = "Are you sure you want to close this website?\n\nPress 'OK' to confirm.";
       if (confirm(text) == true) {
         window.close(); //Add more things to this function
       } else {}
@@ -403,14 +416,14 @@
       function estFinishTime(data)
       {return "Calculating..."}
 
-    // I moved some stuff into html for consistancy
+    // I moved stuff into html for consistancy
     //Sets up all the events for the events listener.
     $(document).ready(function () {
         //stopStartPCR.addEventListener("click", function () { startStopPCR() } ); Moved into the html for consistancy
-        //emailMyFiles.addEventListener("click", function () { sendFiles() } ); Commented out for now, will uncomment later
+        //emailMyFiles.addEventListener("click", function () { sendFiles() } );  Moved into the html for consistancy
         //rec_startstop.addEventListener("click", function () { startstop_record() } ); Commented out because there is no use for it
         //serverShutdown.addEventListener("click", function () { stopServer()}); Commented out because now we have a window alert
-        //submitfilename.addEventListener("click", function() {changeFile()}); Commented out because there is no use for it
+        //submitfilename.addEventListener("click", function() {changeFile()}); Commented out becuase button doesn't exist anymore
         });
 
     //Shows content tabs when tabs are clicked
@@ -522,17 +535,9 @@
     //Implements Total Cycles (Change)
     document.getElementById("totalCycles").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + 50 + "</span>"; // Change
 
-    //This code alters the file name. Doesnt belong here. Doesnt work yet. Will mess with later.
-    //var nameOfProject = document.getElementById(projName)
-    //var date = timeStarted.getFullYear()+(timeStarted.getMonth()+1)+timeStarted.getDate();
-    //var time = timeStarted.getUTCHours() + timeStarted.getUTCMinutes() + imeStarted.getUTCSeconds();
-    //var dateTime = date+' '+time;
-    //document.getElementById('myTextarea').value = projName + "_" + dateTime;
-
-
     // Safety Feature if someone accidently refreshes or leaves the page
     window.onbeforeunload = function() {
-      return "Please do not leave this page. Data will be lost.";};
+      return "Are you sure you want to leave this page?";};
 
   </script>
 </body>
