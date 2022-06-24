@@ -218,17 +218,35 @@
     var date_win_min = t.getTime();
     var date_win_max = date_win_min + 2*taxis_increment;
 
+    var isRunning = false; //Keeps track of whether the system is actually running. NOT the same as clientStarted, which is when the client presses start
+
     // Handles the events coming from the websocket. Format switches off the id blank on the json variable being sent.
     ws.onmessage = function(event){
       var msg = JSON.parse(event.data);
         switch(msg.id){
 
           case "connect":
+            isRunning = msg.running;
             console.log(msg.status);
               document.getElementById('serverStatus').innerHTML =  "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>"; //Changes Server Status
+            //alert(isRunning);
+            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename);
+
+            if (isRunning == "true")
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+              + "In Progress" + "</span>";
+            }
+            else if(isRunning == "false")
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+              + "Not Running" + "</span>";
+            }
+
           break;
 
           case "cycledata":
+            isRunning = msg.running;
             x = new Date();  // Get current time
             y = msg.fluor; // Get fluoresence.
             temp = msg.temp; // Get temperature.
@@ -241,19 +259,38 @@
             if(y > -100)
               {data.push([x,y,temp]);
                g.updateOptions( { 'file': data } );};
+
+               if (isRunning == "true")
+               {
+                 document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+                 + "In Progress" + "</span>";
+               }
+               else if(isRunning == "false")
+               {
+                 document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+                 + "Not Running" + "</span>";
+               }
           break;
 
           case "PCRdata": //In the future, msg.cycleno will give us the real cycleno
+            isRunning = msg.running;
             cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data.
               document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleno + "</span>"; //Changes Cycle Number
             fam = msg.fam; //Retrieve FAM fluoresence.
             cy5 = msg.cy5; //Retrieve Cy5 fluoresence.
             data2.push([cycleno, fam, cy5]); //Push the new data onto the graph source.
             pcr.updateOptions( {'file': data2 } ); //Update it.
-          break;
 
-          case "filestatus": //We get a message from this that we have to access, in the future. We want to just put it in the error out tbh.
-            console.log(msg.status); //Log the confirmation of filename change.
+            if (isRunning == "true")
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+              + "In Progress" + "</span>";
+            }
+            else if(isRunning == "false")
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+              + "Not Running" + "</span>";
+            }
           break;
 
           default:
@@ -309,7 +346,43 @@
     });
 
 //Functions Begin
-      var isRunning = false; //Keeps track of whether the system is actually running. NOT the same as clientStarted, which is when the client presses start
+
+      function onConnect(run, start, project, operator, experiment, config, comments, filename)
+     {
+       if(run == "true")
+       {document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
+       start.bold() + "</span>";
+       document.getElementById("projName").value = project;
+       document.getElementById("opName").value = operator;
+       document.getElementById('expName').value = experiment;
+       document.getElementById('comments').value = comments;
+       document.getElementById('filename').value = filename;
+       a.innerHTML = config;
+
+       document.getElementById('projName').disabled = true;
+       document.getElementById('opName').disabled = true;
+       document.getElementById('expName').disabled = true;
+       document.getElementById("dropdown").style.pointerEvents = "none";
+         document.getElementById("dropdown").style.opacity = "0.6";
+       document.getElementById('filename').disabled = true;
+
+       document.getElementById('startStopPCR').innerHTML = "Stop PCR";
+       document.getElementById('startStopPCR').style.backgroundColor = 'Tomato';
+       clientPressedStart = true;
+        }
+       }
+
+       var timeFinishDisplay;
+       function runFinished() {
+
+         var timeFinished = new Date(); //initialize Start Time
+         timeFinishDisplay = timeFinished.toLocaleTimeString();
+         document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;" +
+         timeFinishDisplay.bold() + "</span>";
+
+
+       }
+
       //Checks if project name, operator name, and configuration are filled out before run can begin
       function conditionsForStart()
       { if (String(document.getElementById("projName").value).trim().length == 0){
@@ -354,22 +427,19 @@
                   //Changes Button and System Status
                   document.getElementById('startStopPCR').innerHTML = "Stop PCR";
                     document.getElementById('startStopPCR').style.backgroundColor = 'Tomato';
-                  document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-                  + "In Progress" + "</span>";
                   clientPressedStart = true;
                   startStopPCR();}
                 else {}
             }
             else{
-              let text = "\nAre you sure you want to stop this PCR? \n\n If you do, the experiment will end.";
+              let text = "\nAttention: you are currently losing data. \n\nAre you sure you want to stop this PCR? \n\n If you do, the experiment will end.";
                 //Changes Button and System Status
                 if (confirm(text) == true) {
                   document.getElementById('startStopPCR').innerHTML = "Start PCR";
                     document.getElementById('startStopPCR').style.backgroundColor = 'LimeGreen';
-                  document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-                  + "Not Running" + "</span>";
                   clientPressedStart = false;
-                  startStopPCR();}
+                  startStopPCR();
+                  runFinished();}
                 else{}
             }
           }
@@ -389,6 +459,7 @@
         timeStartDisplay = timeStarted.toLocaleTimeString();
         document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
         timeStartDisplay.bold() + "</span>";
+        document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;  &emsp; &emsp; -" + "</span>";
         //This code alters the default file name.
           if (String(document.getElementById("filename").value).trim().length == 0){
             var nameOfProject = document.getElementById("projName").value;
@@ -417,6 +488,7 @@
           t = new Date();
             date_win_min = t.getTime();
             date_win_max = date_win_min + 2*taxis_increment;
+            g.updateOptions( { dateWindow : [date_win_min, date_win_max] } );
           data.push([t, 0, 0]);
           data2.push([cycleno, 0, 0]);
           g.updateOptions({ 'file': data});
@@ -424,6 +496,18 @@
 
           changeFile();
           clientPressedStart = false;
+          var msg = {
+            id: "startSave",
+            startTime: timeStartDisplay,
+            projectName: document.getElementById("projName").value,
+            operator: document.getElementById("opName").value,
+            experimentName: document.getElementById('expName').value,
+            config: a.innerHTML,
+            comments: document.getElementById('comments').value,
+            filename: document.getElementById('filename').value
+          };
+          ws.send(JSON.stringify(msg)); //sends message, finally
+
       }
       else{
         //This code enables all major entry fields
@@ -436,7 +520,9 @@
         oldFileName = newFileName; //for storing purposes
         clientPressedStart = true;
       }
-      var msg = {id: "start/stop"};
+      var msg = {
+        id: "start/stop"
+      };
       ws.send(JSON.stringify(msg)); //sends message, finally
     }
 
@@ -490,9 +576,11 @@
       //Turns the server off. This function should usually NEVER be called.
       function stopServer() {
         //alert("Server Stopped");
+        document.getElementById('serverStatus').innerHTML =  "Server Status: <span style = 'font-weight:bold;''> Not Connected </span>";
         var msg = {
           id: "shutdown"};
-        ws.send(JSON.stringify(msg));}
+        ws.send(JSON.stringify(msg));
+      }
 
       //Opens a new page so the user can get Help (Implement it so its the manual) --> change in the future
       function help(){
@@ -606,18 +694,6 @@
   window.onbeforeunload = function() {
     return "Are you sure you want to leave this page?";};
 
-    // I integrated this stuff into the html for consistancy
-        // Harness a variable to each button to handle events later.
-        //var stopStartPCR = document.getElementById("startPCR"); // Not Active
-        //var emailMyFiles = document.getElementById("emailData"); // Not Active
-        //var serverShutdown = document.getElementById("closeServer"); // Not Active
-        //$(document).ready(function () { //Sets up all the events for the events listener.
-        //stopStartPCR.addEventListener("click", function () { startStopPCR() } ); Moved into the html for consistancy
-        //emailMyFiles.addEventListener("click", function () { sendFiles() } );  Moved into the html for consistancy
-        //rec_startstop.addEventListener("click", function () { startstop_record() } ); Commented out because there is no use for it
-        //serverShutdown.addEventListener("click", function () { stopServer()}); Commented out because now we have a window alert
-        //submitfilename.addEventListener("click", function() {changeFile()}); Commented out becuase button doesn't exist anymore
-        //});
   </script>
 </body>
 </html>
