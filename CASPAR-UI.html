@@ -58,8 +58,8 @@
   .div4-2 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px}
 
   .container3 {display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-column-gap: 8px;
     grid-row-gap: 8px;}
   .div1-3 { grid-area: 1 / 1 / 5 / 3; border-style:solid; border-width: 2px} /*left content */
@@ -118,23 +118,23 @@
       <div class="div2-1" id="graphDiv" style="width:100%; height:100%; display:block!important;"></div> <!--graph goes here-->
 
       <div class="div3-1">
-        <button class="inrbtn" id="startPCR" style=""> Start PCR </button>
-        <button class="inrbtn" id="stopPCR" onclick="startStopPCR()"> Stop PCR </button>
+        <button class="inrbtn" id="startPCR" onclick = "startPCR()"> Start PCR </button>
+        <button class="inrbtn" id="stopPCR" onclick = "stopPCR()"> Stop PCR </button>
         <p class="inrtxt">Current Cycle:</p>
-        <p class="inrtxt" id="currentCycle" style="font-weight:bold; font-size:120%">1</p> <!--can be changed-->
+        <p class="inrtxt" id="currentCycle" style="font-weight:bold; font-size:120%"> - </p> <!--will be changed-->
         <p class="inrtxt">Total Cycles:</p>
-        <p class="inrtxt" id="totalCycles" style="font-weight:bold; font-size:120%">50</p> <!--can be changed-->
+        <p class="inrtxt" id="totalCycles" style="font-weight:bold; font-size:120%"> - </p> <!--will be changed-->
       </div>
 
       <div class="div4-1">
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; ">Operator <br> <br> Comments:</p>
         <textarea class = "btminp" id="operatorComments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
-        <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Status: <br> <br>
-          <span style= "font-weight: bold; font-size:110%; color: #48c531"> &emsp;In Progress </span></p> <!--can be changed-->
+        <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> System Status:
+          <br> <br> <span style= "font-weight: bold; font-size:110%;"> &ensp;Not Running </span></p> <!--will be changed-->
         <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Start Time:
-          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;12:34:56 </span></p> <!--can be changed-->
+          <br> <br> <span style= "font-weight: bold; font-size:110%"> &ensp; Not Started </span></p> <!--will be changed-->
         <p class="inrtxt3" id="estFinTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Est. Finish Time:
-          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;03:14:15 </span></p> <!--can be changed-->
+          <br> <br> <span style= "font-weight: bold; font-size:110%"> &ensp; - </span></p> <!--will be changed-->
         <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
           "quitConfirmation()"> Quit Program </button>
       </div>
@@ -213,7 +213,7 @@
     data2.push([cycleno, 0, 0]);
 
     // Harness a variable to each button to handle events later.                 Add more here.
-    var startStopPCR = document.getElementById("startPCR");
+    var stopStartPCR = document.getElementById("startPCR"); // Not Active
     var emailMyFiles = document.getElementById("emailData"); // Not Active
     var serverShutdown = document.getElementById("closeServer"); // Not Active
 
@@ -253,6 +253,8 @@
           break;
           case "PCRdata":
             cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data.
+              //Implements Num Cycles
+              document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleno + "</span>";
             fam = msg.fam; //Retrieve FAM fluoresence.
             cy5 = msg.cyfive; //Retrieve Cy5 fluoresence.
             data2.push([cycleno, fam, cy5]); //Push the new data onto the graph source.
@@ -315,6 +317,49 @@
 
     //Functions Begin
 
+    var started = false; // Keeps Track of if the system is started or not. Decides if buttons working
+    //Starts PCR. Changes System Status.
+
+    function startPCR()
+    {
+      if(started)
+      {}
+      else {started = true;
+        document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:#48c531;font-weight:bold;> &ensp;"
+        + "In Progress" + "</span>";
+        startStopPCR();
+
+      }
+    }
+
+    //Stops PCR. Changes System Status.
+    function stopPCR()
+    {
+      if (started)
+      {started = false;
+        document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+        + "Not Running" + "</span>";
+      startStopPCR();
+     }
+      else {}
+    }
+
+    var timeStarted; //initialize Start Time variable
+    var firstPress=true; //Start Time display conditional
+    // Start or stop the PCR depending on its current state.
+    function startStopPCR() {
+      if (firstPress)
+      {
+        timeStarted = t.toLocaleTimeString();
+        document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
+        timeStarted.bold() + "</span>";
+        firstPress = false;
+      }
+      //alert("Machine Started/Stopped");
+      var msg = {
+        id: "start/stop"};
+      ws.send(JSON.stringify(msg));}
+
     //Changes files based off the textbox on the page and sends the name to the server. The server will reject the request if it's running.
     // This Function should run only inside other functions
     function changeFile()
@@ -326,14 +371,9 @@
 
     //Turns the server off. Don't call this. Really don't.
     function stopServer() {
+      //alert("Server Stopped");
       var msg = {
         id: "shutdown"};
-      ws.send(JSON.stringify(msg));}
-
-    // Start or stop the PCR depending on its current state.
-    function startStopPCR() {
-      var msg = {
-        id: "start/stop"};
       ws.send(JSON.stringify(msg));}
 
     // Rewriting this to email the files to a chosen address.
@@ -359,13 +399,18 @@
       } else {}
       }
 
+      //Calculates Estimated Finish time
+      function estFinishTime(data)
+      {return "Calculating..."}
+
+    // I moved some stuff into html for consistancy
     //Sets up all the events for the events listener.
     $(document).ready(function () {
-        startStopPCR.addEventListener("click", function () { startStopPCR() } );
+        //stopStartPCR.addEventListener("click", function () { startStopPCR() } ); Moved into the html for consistancy
         //emailMyFiles.addEventListener("click", function () { sendFiles() } ); Commented out for now, will uncomment later
         //rec_startstop.addEventListener("click", function () { startstop_record() } ); Commented out because there is no use for it
-        //serverShutdown.addEventListener("click", function () { stopServer()}); Commented out becuase now we have a window alert
-        //submitfilename.addEventListener("click", function() {changeFile()}); Commented out becuase there is no use for it
+        //serverShutdown.addEventListener("click", function () { stopServer()}); Commented out because now we have a window alert
+        //submitfilename.addEventListener("click", function() {changeFile()}); Commented out because there is no use for it
         });
 
     //Shows content tabs when tabs are clicked
@@ -465,6 +510,29 @@
     then close all select boxes:*/
     document.addEventListener("click", closeAllSelect);
     // Code for the dropdown on the first page ends
+
+    //Changes the words on the page. These words dont change ever!! Most of this is already implemented elsewhere in code.
+
+    //Implements EstFinishTime
+    var nothing = "-";
+    document.getElementById("estFinTime").innerHTML =  "<br> Est. Finish Time: <br> <br> <span style=font-size:110%> &emsp; &emsp; &ensp;"
+    + nothing.bold() + "</span>";
+    //Num Cycles is 0 initially. Changing Cycles implemented elsewhere.
+    document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + 0 + "</span>";
+    //Implements Total Cycles (Change)
+    document.getElementById("totalCycles").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + 50 + "</span>"; // Change
+
+    //This code alters the file name. Doesnt belong here. Doesnt work yet. Will mess with later.
+    //var nameOfProject = document.getElementById(projName)
+    //var date = timeStarted.getFullYear()+(timeStarted.getMonth()+1)+timeStarted.getDate();
+    //var time = timeStarted.getUTCHours() + timeStarted.getUTCMinutes() + imeStarted.getUTCSeconds();
+    //var dateTime = date+' '+time;
+    //document.getElementById('myTextarea').value = projName + "_" + dateTime;
+
+
+    // Safety Feature if someone accidently refreshes or leaves the page
+    window.onbeforeunload = function() {
+      return "Please do not leave this page. Data will be lost.";};
 
   </script>
 </body>
