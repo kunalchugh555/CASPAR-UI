@@ -15,60 +15,109 @@
 <style>
   /* Purely stylistic so it looks pretty */
   body{font-family: verdana, Arial;}
-  .header {padding:1px; background-color: LightGray; text-align: center}
-  .tab button { font-size: 120%; background-color:#f0f0f0; margin-top: 8px; margin-right:8px; padding: 5px; cursor: pointer;
-   border-width: 2px; border-radius: 3px}
-  .tab button:hover {background-color: #b4b4b4;}
-  .tab button.active {background-color: #787878; color: #f0f0f0}
+  .tab button { font-size:120%; background-color:#f0f0f0; margin-top:8px; margin-right:8px; padding:5px; cursor:pointer;
+   border-width:2px; border-radius: 3px}
+    .tab button:hover {background-color: #b4b4b4;}
+    .tab button.active {background-color: #787878; color: #f0f0f0}
   .tabcontent {}
-  .inrbtn{display: block; font-size: 100%; background-color:#b4b4b4; padding: 5px; cursor: pointer;
-   border-width: 2px; border-radius: 3px}
-  .inrinp{type = "text"; width: 10%; height:22px; font-size:12pt; border-width: 1px;}
+  .inrbtn{display: block; font-size: 125%; background-color:#b4b4b4; padding: 12px; cursor: pointer;
+   border-width: 2px; border-radius: 3px; margin: 53px auto;}
+    .btmbtn{display: inline; font-size: 150%; background-color:#b4b4b4; padding: 5px; cursor: pointer;
+    border-width: 2px; border-radius: 3px;}
+  .inrtxt{font-size: 110%; text-align: center; margin:35px}
+    .inrtxt2{font-size: 110%; text-align: center; margin:25px}
+    .inrtxt3{font-size: 110%; margin:15px}
+  .inrinp{type = "text"; width: 85%; height:25px; font-size:12pt; border-width: 1px; padding:3px 8px;}
+    .btminp{type = "text"; width: 30%; height:50%; font-size:12pt; border-width: 1px; padding:3px 8px; resize: none; display:inline;}
 
-  /* grids for each tab */
+  /* grids/layputs for each tab */
   .container1 {display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(7, 1fr);
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.4fr;
   grid-column-gap: 8px;
   grid-row-gap: 8px;}
-  .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 1px}
-  .div2-1 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 1px}
-  .div3-1 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 1px}
-  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 1px}
+  .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px} /*left content */
+  .div2-1 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px} /*middle content */
+  .div3-1 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px} /*right content */
+  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px; height:100%;} /*bottom content */
+
+  .container2 {display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.8fr;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;}
+  .div1-2 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px}
+  .div2-2 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px}
+  .div3-2 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px}
+  .div4-2 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px}
+
+  .container3{}
 </style>
 </head>
 
 <body>
 
   <div class="tab">
-    <button class="tablinks" id = "Tab1" onclick="Show(event, 'Tab1C')">Tab 1</button>
-    <button class="tablinks" id = "Tab2" onclick="Show(event, 'Tab2C')">Tab 2</button>
-    <button class="tablinks" id = "Tab3" onclick="Show(event, 'Tab3C')">Tab 3</button>
-    <button id="closeserver" style="float:right"> Help </button>
-    <button id="closeserver" style="float:right"> Shutdown Server (DO NOT PRESS) </button>
+    <button class="tablinks" id = "tab1" onclick="show(event, 'tab1c')">Main</button>
+    <button class="tablinks" id = "tab2" onclick="show(event, 'tab2c')">Results</button>
+    <button class="tablinks" id = "tab3" onclick="show(event, 'tab3c')">Configure</button>
+    <button id="help" style="float:right"> Help </button>
+    <button id="closeServer" style="float:right" onclick = "shutdownConfirmation()"> Shutdown Server (DO NOT PRESS) </button>
   </div>
 
   <div id="divider" style="width:1200px; height:8px; margin: auto;"></div>
 
-  <div id="Tab1C" class="tabcontent">
+  <div id="tab1c" class="tabcontent">
     <div class="container1">
-      <div class="div1-1">
-        <button class="inrbtn" id="start_PCR" > Start/Stop PCR </button>
+      <div class="div1-1" style ="text-align:center;">
+        <p class="inrtxt2">Project Name:</p>
+        <input class = "inrinp" id="proj_name">
+        <p class="inrtxt2">Operator:</p>
+        <input class = "inrinp" id="op_name">
+        <p class="inrtxt2">Experiment Name:</p>
+        <input class = "inrinp" id="exp_name">
       </div>
-      <div class="div2-1" id="div_g" style="width:1000px; height:480px; margin: auto;"> </div>
-      <div class="div3-1"> </div>
-      <div class="div4-1"> </div>
+      <div class="div2-1" id="graphDiv" style="width:1020px; height:520px;"></div> <!--graph goes here-->
+      <div class="div3-1">
+        <button class="inrbtn" id="startPCR" style=""> Start PCR </button>
+        <button class="inrbtn" id="stopPCR" > Stop PCR </button>
+        <p class="inrtxt">Current Cycle:</p>
+        <p class="inrtxt" id="currentCycle" style="font-weight:bold; font-size:120%">1</p> <!--can be changed-->
+        <p class="inrtxt">Total Cycles:</p>
+        <p class="inrtxt" id="totalCycles" style="font-weight:bold; font-size:120%">50</p> <!--can be changed-->
+      </div>
+      <div class="div4-1">
+        <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; ">Operator <br> <br> Comments:</p>
+        <textarea class = "btminp" id="operatorComments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
+        <p class="inrtxt3" id="sysStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Status: <br> <br>
+          <span style= "font-weight: bold; font-size:110%; color: #48c531"> &emsp;In Progress </span></p> <!--can be changed-->
+        <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Start Time:
+          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;12:34:56 </span></p> <!--can be changed-->
+        <p class="inrtxt3" id="estFinTim" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Est. Finish Time:
+          <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;03:14:15 </span></p> <!--can be changed-->
+        <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
+        "quitConfirmation()"> Quit Program </button>
+      </div>
     </div>
   </div>
 
-  <div id="Tab2C" class="tabcontent">
-    <button class="inrbtn" id="my_Savedata" > Email Data </button>
-    <input class = "inrinp" id="filename">
-    <button class="inrbtn" id="submitfilename" > Set Save Data Filename </button>
-    <div id="div_pcr" style="width:1000px; height:500px; margin: auto;"></div>
+  <div id="tab2c" class="tabcontent">
+    <div class="container2">
+      <div class="div1-2">
+        <input class = "inrinp" id="filename">
+        <button class="inrbtn" id="submitfilename" style="display:inline" > Set Save Data Filename </button>
+      </div>
+      <div class="div2-2" id="divPCR" style="width:1000px; height:480px;"> </div>
+      <div class="div3-2">
+        <button class="inrbtn" id="mySaveData" > Email Data </button>
+        <button class="inrbtn" id="myDownloadData" > Download Data </button>
+      </div>
+      <div class="div4-2">
+      </div>
+    </div>
   </div>
 
-  <div id="Tab3C" class="tabcontent">
+  <div id="tab3c" class="tabcontent">
     <p> Content 3 </p>
   </div>
 
@@ -84,9 +133,9 @@
     data2.push([cycleno, 0, 0]);
 
     // Harness a variable to each button to handle events later.
-    var b_startPCR = document.getElementById("start_PCR");
-    var emailmyfiles = document.getElementById("my_Savedata");
-    var servershutdown = document.getElementById("closeserver");
+    var bstartPCR = document.getElementById("startPCR");
+    var emailMyFiles = document.getElementById("mySaveData");
+    var serverShutdown = document.getElementById("closeServer");
 
     var taxis_increment = 10 * 1000;          // axis increment in milliseconds
 
@@ -137,7 +186,7 @@
           }};
 
     // Declare our graph for cycling data.
-    var g = new Dygraph(document.getElementById("div_g"), data,
+    var g = new Dygraph(document.getElementById("graphDiv"), data,
       {labels: ['Time','F','Temp'],
        series: {
           'F': {
@@ -162,7 +211,7 @@
     });
 
     // Declare the graph for PCR data.
-    var pcr = new Dygraph(document.getElementById("div_pcr"), data2,
+    var pcr = new Dygraph(document.getElementById("divPCR"), data2,
       {labels: ['Cycle','FAM','Cy5'],
        series: {
          'FAM': {
@@ -187,40 +236,57 @@
     //Changes files based off the textbox on the page and sends the name to the server. The server will reject the request if it's running.
     function changeFile()
       {var nameforchange = document.getElementById("filename").value;
-          var msg = {
-            id: "filename",
-            newname: nameforchange};
-          ws.send(JSON.stringify(msg));}
+        var msg = {
+          id: "filename",
+          newname: nameforchange};
+        ws.send(JSON.stringify(msg));}
 
     //Turns the server off. Don't call this. Really don't.
-    function stopserver() {
-          var msg = {
-            id: "shutdown"};
-          ws.send(JSON.stringify(msg));}
+    function stopServer() {
+      var msg = {
+        id: "shutdown"};
+      ws.send(JSON.stringify(msg));}
 
     // Start or stop the PCR depending on its current state.
     function startPCR() {
-          var msg = {
-            id: "start/stop"};
-          ws.send(JSON.stringify(msg));}
+      var msg = {
+        id: "start/stop"};
+      ws.send(JSON.stringify(msg));}
 
     // Rewriting this to email the files to a chosen address.
-    function sendfiles() {
-          var msg = {
-            id: "sendemail"};
-          ws.send(JSON.stringify(msg));}
+    function sendFiles() {
+      var msg = {
+        id: "sendemail"};
+      ws.send(JSON.stringify(msg));}
 
     //Sets up all the events for the events listener.
     $(document).ready(function () {
-      b_startPCR.addEventListener("click", function () { startPCR() } );
-      emailmyfiles.addEventListener("click", function () { sendfiles() } );
-      // rec_startstop.addEventListener("click", function () { startstop_record() } );
-      servershutdown.addEventListener("click", function () { stopserver()});
-      submitfilename.addEventListener("click", function() {changeFile()});
-      });
+        bstartPCR.addEventListener("click", function () { startPCR() } );
+        emailMyFiles.addEventListener("click", function () { sendFiles() } );
+        //rec_startstop.addEventListener("click", function () { startstop_record() } );
+        //serverShutdown.addEventListener("click", function () { stopServer()});
+        submitfilename.addEventListener("click", function() {changeFile()});
+        });
 
-    //Shows tabs when tabs are clicked
-    function Show(evt, contentid) {
+      //opens a window prompt to confirm whether the user meant to quit the program.
+    function quitConfirmation() {
+      let text = "Are you sure you want to quit this program?\n\nPress 'OK' to confirm.";
+      if (confirm(text) == true) {
+        stopServer();
+      } else {}
+      }
+
+      //opens a window prompt to confirm whether the user meant to shutdown the server.
+    function shutdownConfirmation() {
+      let text = "Are you sure you want to shutdown this Server?\nIf you do Nick will be mad.\n\nPress 'OK' to confirm.";
+      //Edit before submit
+      if (confirm(text) == true) {
+
+      } else {}
+      }
+
+    //Shows content tabs when tabs are clicked
+    function show(evt, contentid) {
       var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
       for (i = 0; i < tabcontent.length; i++) {
@@ -233,7 +299,7 @@
       document.getElementById(contentid).style.display = "block";
       evt.currentTarget.className += " active"; }
 
-    document.getElementById("Tab1").click(); //By Default, the first tab is shown.
+    document.getElementById("tab1").click(); //By Default, the first tab is shown.
   </script>
 </body>
 </html>
