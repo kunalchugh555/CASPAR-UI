@@ -52,7 +52,7 @@
   .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px} /*bottom content */
 
   .container2 {display: grid;
-  grid-template-columns: 0.75fr 0.75fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
+  grid-template-columns: 0.77fr 0.78fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
   grid-template-rows: 1.1fr 1.1fr 1.1fr 1.1fr 1.1fr 1.1fr 0.4fr;
   grid-column-gap: 8px;
   grid-row-gap: 8px;} /*same grid as container1*/
@@ -69,19 +69,8 @@
   .div1-3 { grid-area: 1 / 1 / 5 / 3; border-style:solid; border-width: 2px} /*left content */
   .div2-3 { grid-area: 1 / 3 / 5 / 5; border-style:solid; border-width: 2px} /*right content */
 
-  /*DropDown Menu on the First Tab DROPCHANGE*/
-  .custom-select {position: relative;}
-    .custom-select select {display: none;} /*hide original select element:*/
-  .select-selected {background-color:#b4b4b4; border: 6px;}
-    .select-selected:after {position: absolute; content: ""; top: 14px; right: 10px;width: 0px; height: 0px; border: 6px solid transparent;
-     border-color: #3c3c3c transparent transparent transparent;} /*point the arrow upwards when the select box is open:*/
-    .select-selected.select-arrow-active:after { border-color: transparent transparent #3c3c3c transparent; top: 7px;}
-  .select-items div,.select-selected {padding: 6px 8px; border: 1px solid transparent;
-   border-color: #000000 #000000 #000000 #000000; cursor: pointer; user-select: none;} /*style the options*/
-    .select-items {position: absolute; background-color: #b4b4b4; border-radius: 3px; top: 100%; left: 0; right: 0; z-index: 99;}
-  .select-hide {display: none;} /*hide items when the select box is closed:*/
-  .select-items div:hover, .same-as-selected {background-color: rgba(0, 0, 0, 0.1);}
-  .disable{pointer-events:none;} /* disables the ability to click on the dropdown menu */
+  .custom-select {position: relative; width: 99%; height:33px; border-width: 1px; font-size:12pt; background-color: #FFFFFF; padding:3px 3px;}
+    .custom-select::after {position: relative; width: 99%; height:33px; border-width: 1px; font-size:12pt; background-color: #FFFFFF; padding:3px 3px;}
 </style>
 </head>
 
@@ -110,11 +99,10 @@
         <input class = "inrinp" type="text" id="expName"> <!--Value Can Change-->
         <p class="inrtxt2">Configurations:</p>
 
-        <div id = "dropdown" class="custom-select" style="width:93%; margin:0 auto; margin-bottom: 30px;"> <!--Value Can Change--> <!--DROPCHANGE-->
-          <select id = "configDropdown" style="text-align:left;"> <!-- Eventually, this will be an array that will increase/decrease as needed -->   <!--DROPCHANGE-->
-            <option value="0" id="none">&emsp;</option> <!-- blank line -->   <!--DROPCHANGE-->
-            <option value="1" id="Hello">Hello</option>   <!--DROPCHANGE-->
+        <div id = "dropdown" style="width:93%; margin:0 auto; margin-bottom: 30px;"> <!--Value Can Change-->
+          <select id = "configDropdown" class="custom-select" style="text-align:left;"> <!-- Eventually, this will be an array that will increase/decrease as needed -->
           </select>
+
         </div>
       </div>
 
@@ -185,8 +173,8 @@
 
       <div class="div1-3">
         <h2 style = "text-align: center;"> Configuration Information </h2>
-        <p class = 'inrtxt3'> Configuration: V <br> <br> Default Operator Name: Nick
-          <br> <br> Default Email: nick@gmail.com <br> <br> Default Project Name: Pigs </p> <!--Changing will be implemented-->
+        <p class = 'inrtxt3'> Configuration: Default <br> <br> Default Operator Name:
+          <br> <br> Default Email: <br> <br> Default Project Name: </p> <!--Changing will be implemented-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Device Info:</p>
         <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!--Hardcoding-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Version Info:</p>
@@ -284,6 +272,8 @@
 
     var isRunning = false; //Keeps track of whether the system is actually running. NOT the same as clientStarted, which is when the client presses start
     var runFinished = false; //Keeps track if the run is currently finished. Important for __ insert reason.
+    var dropdownID = document.getElementById("configDropdown"); //important because we reference the inner text in the dropdown very often
+    var namearray; //will be used for save configuration Safety
 
     // Handles the events coming from the websocket. Format switches off the id blank on the json variable being sent.
     ws.onmessage = function(event){
@@ -307,22 +297,19 @@
               + "Not Running" + "</span>";
               document.getElementById("esStatus").innerHTML = "Status: Not Running";}
 
-              //DROPCHANGE
-            //code to extract all the config names
-            //console.log(msg.configs);
-            //let select = document.getElementById('configDropdown');
-            //var allnames = (msg.configs).substring(6);
-            //console.log(allnames);
-            //var count = (((allnames.match(/:;:;:/g) || []).length)+1);
-            //console.log(count);
-            //var namearray = allnames.split(":;:;:");
-            //console.log(namearray.length);
+            //This code extracts all the configuration names and puts it in the dropdown on the first page
+            var allnames = (msg.configs).substring(6);
+            var count = (((allnames.match(/:;:;:/g) || []).length)+1);
+            namearray = allnames.split(":;:;:");
+            let select = document.getElementById('configDropdown');
 
-            //var option = document.createElement("option");
-            //option.text = "Kiwi";
-            //option.value = 2;
-            //option.id = "kiwi";
-            //select.add(option);
+            for (var i=0; i<count; i++){
+              var option = document.createElement("option");
+              option.text = namearray[i];
+              option.value = "namearray[i]";
+              option.id = "namearray[i]";
+              select.add(option);
+            }
           break;
 
           case "PCRdata": //In the future, msg.cycleno will give us the real cycleno
@@ -389,7 +376,7 @@
           document.getElementById('expName').value = experiment;
           document.getElementById('comments').value = comments;
           document.getElementById('filename').value = filename;
-          a.innerHTML = config; //DROPCHANGE
+          dropdownID.value = config; //DROPCHANGE
 
           document.getElementById("esConfig").innerHTML = "Configuration: " + config;
           document.getElementById("esProj").innerHTML = "Project Name: " + project;
@@ -400,8 +387,8 @@
           document.getElementById('projName').disabled = true;
           document.getElementById('opName').disabled = true;
           document.getElementById('expName').disabled = true;
-          document.getElementById("dropdown").style.pointerEvents = "none"; //DROPCHANGE
-           document.getElementById("dropdown").style.opacity = "0.6"; //DROPCHANGE
+          document.getElementById("dropdown").style.pointerEvents = "none";
+           document.getElementById("dropdown").style.opacity = "0.6";
           document.getElementById('filename').disabled = true;
          //Changes start/stop button
           document.getElementById('startStopPCR').innerHTML = "Stop PCR";
@@ -421,7 +408,7 @@
           alert("\nPlease fill out the Operator Name.");
           return false;}
 
-        else if ((String(a.innerHTML).trim().length == 0)) {
+        else if ((String(dropdownID.options[dropdownID.selectedIndex].text).trim().length == 0)) {
           alert("\nPlease select/create a Configuration.");
           return false;}
 
@@ -452,7 +439,7 @@
                   }
               let text = "Are you sure you want to start this PCR?\n\nAll previous data will be cleared and you will be starting this experiment with the following parameters:\n\n" +
                 "Save Data Filename: " + displayFileName1  + "\nOperator Name: " + document.getElementById("opName").value + "\nExperiment Name: " +
-                document.getElementById("expName").value + "\nConfiguration: " + a.innerHTML + "\n\nPress 'OK' to confirm.";
+                document.getElementById("expName").value + "\nConfiguration: " + dropdownID.options[dropdownID.selectedIndex].text + "\n\nPress 'OK' to confirm.";
                 if (confirm(text) == true) {
                   //Changes Button and System Status
                   document.getElementById('startStopPCR').innerHTML = "Stop PCR";
@@ -512,8 +499,8 @@
             document.getElementById('projName').disabled = true;
             document.getElementById('opName').disabled = true;
             document.getElementById('expName').disabled = true;
-            document.getElementById("dropdown").style.pointerEvents = "none"; //DROPCHANGE
-              document.getElementById("dropdown").style.opacity = "0.6"; //DROPCHANGE
+            document.getElementById("dropdown").style.pointerEvents = "none";
+              document.getElementById("dropdown").style.opacity = "0.6";
             document.getElementById('filename').disabled = true;
           //alert("Machine Started/Stopped");
           //Code to reset graph related things
@@ -534,7 +521,7 @@
           clientPressedStart = false;
 
           //updates the info on the second tab info
-          document.getElementById("esConfig").innerHTML = "Configuration: " + a.innerHTML; //DROPCHANGE
+          document.getElementById("esConfig").innerHTML = "Configuration: " + dropdownID.options[dropdownID.selectedIndex].text;
           document.getElementById("esProj").innerHTML = "Project Name: " + document.getElementById("projName").value;
           document.getElementById("esExp").innerHTML = "Experiment Name: " + document.getElementById('expName').value;
           document.getElementById("esOpName").innerHTML = "Operator Name: " + document.getElementById("opName").value;
@@ -546,7 +533,7 @@
             projectName: document.getElementById("projName").value,
             operator: document.getElementById("opName").value,
             experimentName: document.getElementById('expName').value,
-            config: a.innerHTML, //DROPCHANGE
+            config: dropdownID.options[dropdownID.selectedIndex].text,
             comments: document.getElementById('comments').value,
             filename: document.getElementById('filename').value
           };
@@ -558,8 +545,8 @@
         document.getElementById('projName').disabled = false;
         document.getElementById('opName').disabled = false;
         document.getElementById('expName').disabled = false;
-        document.getElementById("dropdown").style.pointerEvents = "auto"; //DROPCHANGE
-          document.getElementById("dropdown").style.opacity = "1"; //DROPCHANGE
+        document.getElementById("dropdown").style.pointerEvents = "auto";
+          document.getElementById("dropdown").style.opacity = "1";
         document.getElementById('filename').disabled = false;
         oldFileName = newFileName; //for storing purposes
         clientPressedStart = true;
@@ -615,7 +602,7 @@
           }
         }
         else{
-          alert("Please wait for the run to be finished.");
+          alert("Please wait for the run to be finished.")
         }
       }
 
@@ -712,90 +699,6 @@
 
         document.getElementById("tab1").click(); //By Default, the first tab is shown.
 // Code for the tabs ends
-
-//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE
-// Code for the dropdown on the first page starts
-      var x, i, j, l, ll, selElmnt, a, b, c;
-      x = document.getElementsByClassName("custom-select"); /*looks for elements with the class "custom-select":*/
-      l = x.length;
-      for (i = 0; i < l; i++) {
-        selElmnt = x[i].getElementsByTagName("select")[0];
-        ll = selElmnt.length;
-
-        /*creates a new DIV that acts as the selected item for each element*/
-        a = document.createElement("DIV");
-        a.setAttribute("class", "select-selected");
-        a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
-        x[i].appendChild(a);
-
-        /*Creates a new DIV that will contain the option list for each element*/
-        b = document.createElement("DIV");
-        b.setAttribute("class", "select-items select-hide");
-
-        for (j = 1 ; j < ll; j++) {
-
-          /*for each option in the original select element,
-          creates a new DIV that will act as an option item:*/
-          c = document.createElement("DIV");
-          c.innerHTML = selElmnt.options[j].innerHTML;
-          c.addEventListener("click", function(e){
-
-              /*when an item is clicked, updates the original select box,
-              and the selected item:*/
-              var y, i, k, s, h, sl, yl;
-              s = this.parentNode.parentNode.getElementsByTagName("select")[0];
-              sl = s.length;
-              h = this.parentNode.previousSibling;
-              for (i = 0; i < sl; i++) {
-                if (s.options[i].innerHTML == this.innerHTML) {
-                  s.selectedIndex = i;
-                  h.innerHTML = this.innerHTML;
-                  y = this.parentNode.getElementsByClassName("same-as-selected");
-                  yl = y.length;
-                  for (k = 0; k < yl; k++) {
-                    y[k].removeAttribute("class");
-                  }
-                  this.setAttribute("class", "same-as-selected");
-                  break;}
-              }
-              h.click();
-            });
-          b.appendChild(c);}
-        x[i].appendChild(b);
-        a.addEventListener("click", function(e) {
-
-            /*when the select box is clicked, close any other select boxes,
-            and open/close the current select box:*/
-            e.stopPropagation();
-            closeAllSelect(this);
-            this.nextSibling.classList.toggle("select-hide");
-            this.classList.toggle("select-arrow-active");
-            //alert(a.innerHTML);
-          });
-      }
-
-      /*Closes all select boxes in the document,except the current select box:*/
-      function closeAllSelect(elmnt) {
-        var x, y, i, xl, yl, arrNo = [];
-        x = document.getElementsByClassName("select-items");
-        y = document.getElementsByClassName("select-selected");
-        xl = x.length;
-        yl = y.length;
-        for (i = 0; i < yl; i++) {
-          if (elmnt == y[i]) {
-            arrNo.push(i);
-          } else {y[i].classList.remove("select-arrow-active");}
-        }
-        for (i = 0; i < xl; i++) {
-          if (arrNo.indexOf(i)) {
-            x[i].classList.add("select-hide");}
-        }
-      }
-
-      /*if the user clicks anywhere outside the select box,
-      then close all select boxes:*/
-      document.addEventListener("click", closeAllSelect);
-// Code for the dropdown on the first page ends //DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE//DROPCHANGE
 
   // Safety Feature if someone accidently refreshes or leaves the page
   window.onbeforeunload = function leaving() {
