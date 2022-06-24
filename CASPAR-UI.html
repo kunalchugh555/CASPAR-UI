@@ -15,18 +15,24 @@
 <style>
   /* Purely stylistic so it looks pretty */
   body{font-family: verdana, Arial;}
-  .tab button { font-size:120%; background-color:#f0f0f0; margin-top:8px; margin-right:8px; padding:5px; cursor:pointer;
+  .tab button {font-size:120%; background-color:#f0f0f0; margin-top:8px; margin-right:8px; padding:5px; cursor:pointer;
    border-width:2px; border-radius: 3px}
     .tab button:hover {background-color: #b4b4b4;}
     .tab button.active {background-color: #787878; color: #f0f0f0}
   .tabcontent {}
   .inrbtn{display: block; font-size: 125%; background-color:#b4b4b4; padding: 12px; cursor: pointer;
    border-width: 2px; border-radius: 3px; margin: 53px auto;}
+    .inrbtn2{display: block; font-size: 125%; background-color:#b4b4b4; padding: 12px; cursor: pointer;
+    border-width: 2px; border-radius: 3px; margin:auto; margin-top: 48px; margin-bottom: 48px;}
+    .inrbtn3{display: block; font-size: 150%; background-color:#b4b4b4; padding: 12px; cursor: pointer;
+    border-width: 2px; border-radius: 3px; margin:auto; margin-top: 48px; margin-bottom: 48px;}
     .btmbtn{display: inline; font-size: 150%; background-color:#b4b4b4; padding: 5px; cursor: pointer;
     border-width: 2px; border-radius: 3px;}
   .inrtxt{font-size: 110%; text-align: center; margin:35px}
     .inrtxt2{font-size: 110%; text-align: center; margin:30px}
     .inrtxt3{font-size: 110%; margin:15px}
+    .inrtxt4{font-size: 115%; margin-top:40px; margin-bottom: 20px;}
+    .inrtxt5{font-size: 105%; margin-top:40px; margin-bottom: 20px;}
   .inrinp{type = "text"; width: 85%; height:25px; font-size:12pt; border-width: 1px; padding:3px 8px;}
     .btminp{type = "text"; width: 30%; height:50%; font-size:12pt; border-width: 1px; padding:3px 8px; resize: none; display:inline;}
 
@@ -39,19 +45,25 @@
   .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px} /*left content */
   .div2-1 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px} /*middle content */
   .div3-1 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px} /*right content */
-  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px; height:100%;} /*bottom content */
+  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px;} /*bottom content */
 
   .container2 {display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.8fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.4fr;
   grid-column-gap: 8px;
-  grid-row-gap: 8px;}
+  grid-row-gap: 8px;} /*same grid as container1*/
   .div1-2 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px}
   .div2-2 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 2px}
   .div3-2 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 2px}
   .div4-2 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px}
 
-  .container3{}
+  .container3 {display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;}
+  .div1-3 { grid-area: 1 / 1 / 5 / 3; border-style:solid; border-width: 2px} /*left content */
+  .div2-3 { grid-area: 1 / 3 / 5 / 5; border-style:solid; border-width: 2px} /*right content */
 
   /*DropDown Menu on the First Tab*/
   .custom-select {position: relative;}
@@ -82,13 +94,14 @@
 
   <div id="tab1c" class="tabcontent">
     <div class="container1">
+
       <div class="div1-1"  style = "text-align:center;">
         <p class="inrtxt2">Project Name:</p>
-        <input class = "inrinp" id="proj_name">
+        <input class = "inrinp" id="projName">
         <p class="inrtxt2">Operator:</p>
-        <input class = "inrinp" id="op_name">
+        <input class = "inrinp" id="opName">
         <p class="inrtxt2">Experiment Name:</p>
-        <input class = "inrinp" id="exp_name">
+        <input class = "inrinp" id="expName">
         <p class="inrtxt2">Recipes:</p>
         <div class="custom-select" style="width:93%; margin:0 auto;">
           <select style="text-align:left">
@@ -101,7 +114,9 @@
           </select>
         </div>
       </div>
-      <div class="div2-1" id="graphDiv" style="width:1020px; height:520px;"></div> <!--graph goes here-->
+
+      <div class="div2-1" id="graphDiv" style="width:1020px; height:520px; display:block!important;"></div> <!--graph goes here-->
+
       <div class="div3-1">
         <button class="inrbtn" id="startPCR" style=""> Start PCR </button>
         <button class="inrbtn" id="stopPCR" > Stop PCR </button>
@@ -110,39 +125,80 @@
         <p class="inrtxt">Total Cycles:</p>
         <p class="inrtxt" id="totalCycles" style="font-weight:bold; font-size:120%">50</p> <!--can be changed-->
       </div>
+
       <div class="div4-1">
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; ">Operator <br> <br> Comments:</p>
         <textarea class = "btminp" id="operatorComments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
-        <p class="inrtxt3" id="sysStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Status: <br> <br>
+        <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Status: <br> <br>
           <span style= "font-weight: bold; font-size:110%; color: #48c531"> &emsp;In Progress </span></p> <!--can be changed-->
         <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Start Time:
           <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;12:34:56 </span></p> <!--can be changed-->
-        <p class="inrtxt3" id="estFinTim" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Est. Finish Time:
+        <p class="inrtxt3" id="estFinTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Est. Finish Time:
           <br> <br> <span style= "font-weight: bold; font-size:110%"> &emsp;03:14:15 </span></p> <!--can be changed-->
         <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
-        "quitConfirmation()"> Quit Program </button>
+          "quitConfirmation()"> Quit Program </button>
       </div>
+
     </div>
   </div>
 
   <div id="tab2c" class="tabcontent">
     <div class="container2">
+
       <div class="div1-2">
-        <input class = "inrinp" id="filename">
-        <button class="inrbtn" id="submitfilename" style="display:inline" > Set Save Data Filename </button>
+        <p class="inrtxt4" style="font-weight:bold; text-align: center;">Experiment Info:</p>
+        <p class="inrtxt5" id="errorMessages">&emsp;Not Completed <br> &emsp;Check Error Status</p> <!-- Can be changed -->
+        <p class="inrtxt4" style="font-weight:bold; text-align: center;">Device Info:</p>
+        <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!-- Can be changed -->
+        <p class="inrtxt4" style="font-weight:bold; text-align: center;">Version Info:</p>
+        <p class="inrtxt5" id="versionInfo">&emsp;Version 1.0</p> <!-- Can be changed -->
       </div>
-      <div class="div2-2" id="divPCR" style="width:1000px; height:480px;"> </div>
-      <div class="div3-2">
-        <button class="inrbtn" id="mySaveData" > Email Data </button>
-        <button class="inrbtn" id="myDownloadData" > Download Data </button>
+
+      <div class="div2-2" id="divPCR" style="width:1020px; height:520px; display:block!important;"> </div> <!--graph goes here-->
+
+      <div class="div3-2" style = "text-align:center;">
+        <p class="inrtxt4"  style = "margin-bottom: 30px;">Save Data Filename:</p>
+        <input class = "inrinp" id="filename" value="projName_Date_Time"> <!-- Can be changed -->
+        <p class="inrtxt4" style = "margin-bottom: 25px;">Enter Email:</p>
+        <input class = "inrinp" id="email" style = "margin-bottom: 20px; font-size:11pt;">
+        <button class="inrbtn2" id="emailData" style = "margin-top: 10px; margin-bottom: 60px; padding:8px; font-size:115%">
+          Email Data </button>
+        <button class="inrbtn2" id="downloadData" style = "margin-top: 73px; padding:16px; font-size:125%"> Download Data </button>
       </div>
+
       <div class="div4-2">
+        <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:120%; ">Current Save <br>
+        <br> Filepath:</p>
+        <p class="inrtxt3" id="filepath" style="margin-top: 50px; display:inline; float:left; font-size:110%; border-style: solid;
+          border-width:1px; padding: 15px;"> C:\Users\Bob\Desktop\adapPCRRuns\May\CASPAR</p> <!-- Can be changed -->
+        <button class="btmbtn" id="changeFilepath" style = "float:left; margin-top: 35px; margin-left: 30px; padding:12px; font-size:140%">
+          Change Save <br> Filepath</button>
+        <button class="btmbtn" id="saveData" style = "float:left; margin-top: 50px; margin-left: 40px; padding:12px; font-size:140%">
+          Save Data</button>
+        <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Run Status:
+          <br> <br> <span style= "font-weight: bold; font-size:110%;"> &emsp;Completed </span></p> <!--can be changed-->
+        <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
+          "quitConfirmation()"> Quit Program </button>
       </div>
+
     </div>
   </div>
 
   <div id="tab3c" class="tabcontent">
-    <p> Content 3 </p>
+    <div class="container3">
+
+      <div class="div1-3">
+        <h2 style = "text-align: center;"> Configuration Information </h2>
+        <p class = 'inrtxt3' id = configurationInfo> Total Cycles: 3 <br> Recipe: W </p> <!--can be changed-->
+        <button class="inrbtn3" id="devMode" > Launch <br> Developer <br> Mode </button>
+      </div>
+
+      <div class="div2-3">
+        <h2 style = "text-align: center;"> Error Status </h2>
+        <p class = 'inrtxt3' id="errorInfo"> No errors </p>
+      </div>
+
+    </div>
   </div>
 
   <script type="text/javascript">
@@ -158,7 +214,7 @@
 
     // Harness a variable to each button to handle events later.
     var bstartPCR = document.getElementById("startPCR");
-    var emailMyFiles = document.getElementById("mySaveData");
+    var emailMyFiles = document.getElementById("emailData");
     var serverShutdown = document.getElementById("closeServer");
 
     var taxis_increment = 10 * 1000;          // axis increment in milliseconds
