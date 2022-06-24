@@ -21,41 +21,51 @@
   .tab button:hover {background-color: #b4b4b4;}
   .tab button.active {background-color: #787878; color: #f0f0f0}
   .tabcontent {}
-  .inrbtn{font-size: 100%; background-color:#b4b4b4; margin-top: 8px; margin-right:8px; padding: 5px; cursor: pointer;
+  .inrbtn{display: block; font-size: 100%; background-color:#b4b4b4; padding: 5px; cursor: pointer;
    border-width: 2px; border-radius: 3px}
   .inrinp{type = "text"; width: 10%; height:22px; font-size:12pt; border-width: 1px;}
+
+  /* grids for each tab */
+  .container1 {display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;}
+  .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 1px}
+  .div2-1 { grid-area: 1 / 3 / 6 / 9; border-style:solid; border-width: 1px}
+  .div3-1 { grid-area: 1 / 9 / 6 / 11; border-style:solid; border-width: 1px}
+  .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 1px}
 </style>
 </head>
 
 <body>
 
-  <div class="header">
-    <h1> CASPAR </h1>
-  </div>
-
   <div class="tab">
     <button class="tablinks" id = "Tab1" onclick="Show(event, 'Tab1C')">Tab 1</button>
     <button class="tablinks" id = "Tab2" onclick="Show(event, 'Tab2C')">Tab 2</button>
     <button class="tablinks" id = "Tab3" onclick="Show(event, 'Tab3C')">Tab 3</button>
+    <button id="closeserver" style="float:right"> Help </button>
+    <button id="closeserver" style="float:right"> Shutdown Server (DO NOT PRESS) </button>
   </div>
 
-  <div id="Tab1C" class="tabcontent">
-    <div id ="divider1" style="width:1000px; height:6px;"></div>
-    <button class="inrbtn" id="start_PCR" > Start/Stop PCR </button>
-    <button class="inrbtn" id="myrecord_start" > Start New Recording </button>
-    <button class="inrbtn" id="my_Savedata" > Email Data </button>
-    <button class="inrbtn" id="closeserver" > SHUTDOWN SERVER (DO NOT PRESS UNLESS YOU MEAN IT) </button>
-    <input class = "inrinp" id="filename">
-    <button class="inrbtn" id="submitfilename" > Set Save Data Filename </button>
+  <div id="divider" style="width:1200px; height:8px; margin: auto;"></div>
 
-    <div id ="divider2" style="width:800px; height:14px;"> </div>
-    <div id="div_g" style="width:1000px; height:500px; margin: auto;"></div>
-    <div id="divider3" style="width:1000px; height:40px;"></div>
-    <div id="div_pcr" style="width:1000px; height:500px; margin: auto;"></div>
+  <div id="Tab1C" class="tabcontent">
+    <div class="container1">
+      <div class="div1-1">
+        <button class="inrbtn" id="start_PCR" > Start/Stop PCR </button>
+      </div>
+      <div class="div2-1" id="div_g" style="width:1000px; height:480px; margin: auto;"> </div>
+      <div class="div3-1"> </div>
+      <div class="div4-1"> </div>
+    </div>
   </div>
 
   <div id="Tab2C" class="tabcontent">
-    <p> Content 2 </p>
+    <button class="inrbtn" id="my_Savedata" > Email Data </button>
+    <input class = "inrinp" id="filename">
+    <button class="inrbtn" id="submitfilename" > Set Save Data Filename </button>
+    <div id="div_pcr" style="width:1000px; height:500px; margin: auto;"></div>
   </div>
 
   <div id="Tab3C" class="tabcontent">
@@ -76,7 +86,6 @@
     // Harness a variable to each button to handle events later.
     var b_startPCR = document.getElementById("start_PCR");
     var emailmyfiles = document.getElementById("my_Savedata");
-    var rec_startstop = document.getElementById("myrecord_start");
     var servershutdown = document.getElementById("closeserver");
 
     var taxis_increment = 10 * 1000;          // axis increment in milliseconds
@@ -203,12 +212,12 @@
 
     //Sets up all the events for the events listener.
     $(document).ready(function () {
-        b_startPCR.addEventListener("click", function () { startPCR() } );
-        emailmyfiles.addEventListener("click", function () { sendfiles() } );
-        // rec_startstop.addEventListener("click", function () { startstop_record() } );
-        servershutdown.addEventListener("click", function () { stopserver()});
-        submitfilename.addEventListener("click", function() {changeFile()});
-        });
+      b_startPCR.addEventListener("click", function () { startPCR() } );
+      emailmyfiles.addEventListener("click", function () { sendfiles() } );
+      // rec_startstop.addEventListener("click", function () { startstop_record() } );
+      servershutdown.addEventListener("click", function () { stopserver()});
+      submitfilename.addEventListener("click", function() {changeFile()});
+      });
 
     //Shows tabs when tabs are clicked
     function Show(evt, contentid) {
