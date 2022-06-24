@@ -33,8 +33,8 @@
     .inrtxt3{font-size: 110%; margin:15px}
     .inrtxt4{font-size: 115%; margin-top:40px; margin-bottom: 20px;}
     .inrtxt5{font-size: 105%; margin-top:40px; margin-bottom: 20px;}
-  .inrinp{type = "text"; width: 85%; height:25px; font-size:12pt; border-width: 1px; padding:3px 8px;}
-    .btminp{type = "text"; width: 30%; height:50%; font-size:12pt; border-width: 1px; padding:3px 8px; resize: none; display:inline;}
+  .inrinp{width: 85%; height:25px; font-size:12pt; border-width: 1px; padding:3px 8px;}
+    .btminp{width: 30%; height:50%; font-size:12pt; border-width: 1px; padding:3px 8px; resize: none; display:inline;}
 
   /* grids/layputs for each tab */
   .container1 {display: grid;
@@ -77,6 +77,7 @@
     .select-items {position: absolute; background-color: #b4b4b4; border-radius: 3px; top: 100%; left: 0; right: 0; z-index: 99;}
   .select-hide {display: none;} /*hide items when the select box is closed:*/
   .select-items div:hover, .same-as-selected {background-color: rgba(0, 0, 0, 0.1);}
+  .disable{pointer-events:none;}
 </style>
 </head>
 
@@ -88,7 +89,7 @@
     <button class="tablinks" id = "tab3" onclick="show(event, 'tab3c')">Configure</button>
     <button id="help" style="float:right"> Help </button>
     <button id="closeServer" style="float:right" onclick = "shutdownConfirmation()"> Shutdown Server (DO NOT PRESS) </button>
-    <button id="serverStatus" style="float:right; pointer-events: none;" > Server Status: <span style = "color:#48c531;font-weight:bold;"> Connected </span> </button>
+    <button id="serverStatus" style="float:right; pointer-events: none;" > Server Status: <span style = "font-weight:bold;"> Not Connected </span> </button>
   </div>
 
   <div id="divider" style="width:1200px; height:8px; margin: auto;"></div>
@@ -98,14 +99,14 @@
 
       <div class="div1-1"  style = "text-align:center;">
         <p class="inrtxt2">Project Name:</p>
-        <input class = "inrinp" id="projName">
+        <input class = "inrinp" type="text" id="projName">
         <p class="inrtxt2">Operator:</p>
-        <input class = "inrinp" id="opName">
+        <input class = "inrinp" type="text" id="opName">
         <p class="inrtxt2">Experiment Name:</p>
-        <input class = "inrinp" id="expName">
+        <input class = "inrinp" type="text" id="expName">
         <p class="inrtxt2">Recipes:</p>
-        <div class="custom-select" style="width:93%; margin:0 auto;">
-          <select style="text-align:left">
+        <div id = "dropdown" class="custom-select" style="width:93%; margin:0 auto;">
+          <select style="text-align:left;">
             <option value="0" id="none">&emsp;</option> <!-- blank line -->
             <option value="1" id="V">V</option> <!--Change-->
             <option value="2" id="W">W</option> <!--Change-->
@@ -116,11 +117,11 @@
         </div>
       </div>
 
-      <div class="div2-1" id="divPCR" style="width:100%; height:100%; display:block!important;"></div> <!--graph goes here-->
+      <div class="div2-1" id="divPCR" style="width:100%; height:100%; display:block;"></div> <!--graph goes here-->
 
       <div class="div3-1">
-        <button class="inrbtn" id="startPCR" onclick = "startPCR()"> Start PCR </button>
-        <button class="inrbtn" id="stopPCR" onclick = "stopPCR()"> Stop PCR </button>
+        <button class="inrbtn" id="startPCR" onclick = "startConfirmation()"> Start PCR </button>
+        <button class="inrbtn" id="stopPCR" onclick = "stopConfirmation()"> Stop PCR </button>
         <p class="inrtxt">Current Cycle:</p>
         <p class="inrtxt" id="currentCycle" style="font-weight:bold; font-size:120%"> - </p> <!--will be changed-->
         <p class="inrtxt">Total Cycles:</p>
@@ -129,7 +130,7 @@
 
       <div class="div4-1">
         <p class="inrtxt3" style="margin-top: 42px; display:inline; float:left; font-size:110%; "> <br> Comments:</p>
-        <textarea class = "btminp" id="comments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
+        <textarea class = "btminp" type="text" id="comments" style="display:inline-flex; margin-top: 40px; float:left;"></textarea>
         <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> System Status:
           <br> <br> <span style= "font-weight: bold; font-size:110%;"> &ensp;Not Running </span></p> <!--will be changed-->
         <p class="inrtxt3" id="startTime" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Start Time:
@@ -149,19 +150,15 @@
       <div class="div1-2">
         <p class="inrtxt4" style="font-weight:bold; text-align: center;">Experiment Info:</p>
         <p class="inrtxt5" id="errorMessages">&emsp;Not Completed <br> &emsp;Check Error Status</p> <!-- Can be changed -->
-        <p class="inrtxt4" style="font-weight:bold; text-align: center;">Device Info:</p>
-        <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!-- Can be changed -->
-        <p class="inrtxt4" style="font-weight:bold; text-align: center;">Version Info:</p>
-        <p class="inrtxt5" id="versionInfo">&emsp;Version 1.0</p> <!-- Can be changed -->
       </div>
 
-      <div class="div2-2" id="graphDiv" style="width:100%; height:100%; display:block!important;"> </div> <!--graph goes here-->
+      <div class="div2-2" id="graphDiv" style="width:100%; height:100%; display:block;"> </div> <!--graph goes here-->
 
       <div class="div3-2" style = "text-align:center;">
         <p class="inrtxt4"  style = "margin-bottom: 30px;">Save Data Filename:</p>
-        <input class = "inrinp" id="filename" value="projName_Date_Time"> <!-- Will be changed -->
+        <input class = "inrinp" type="text" id="filename" value=""> <!-- Will be changed -->
         <p class="inrtxt4" style = "margin-bottom: 25px;">Enter Email:</p>
-        <input class = "inrinp" id="email" style = "margin-bottom: 20px; font-size:11pt;">
+        <input class = "inrinp" type="text" id="email" style = "margin-bottom: 20px; font-size:11pt;">
         <button class="inrbtn2" id="emailData" onclick = "sendFiles()" style = "margin-top: 10px; margin-bottom: 60px; padding:8px; font-size:115%">
           Email Data </button>
         <button class="inrbtn2" id="downloadData" style = "margin-top: 73px; padding:16px; font-size:125%"> Download Data </button>
@@ -176,9 +173,9 @@
           Change Save <br> Filepath</button>
         <button class="btmbtn" id="saveData" style = "float:left; margin-top: 50px; margin-left: 40px; padding:12px; font-size:140%">
           Save Data</button>
-        <p class="inrtxt3" id="systemStatus" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Run Status:
+        <p class="inrtxt3" id="systemStatus1" style="display:inline; float:left; font-size:110%; margin-left:45px;"> <br> Run Status:
           <br> <br> <span style= "font-weight: bold; font-size:110%;"> &emsp;Completed </span></p> <!--can be changed-->
-        <button class="btmbtn" id="quit" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
+        <button class="btmbtn" id="quit1" style = "float:right; margin-top: 42px; margin-right: 65px; padding:12px;" onclick =
           "quitConfirmation()"> Close Website </button>
       </div>
 
@@ -191,6 +188,10 @@
       <div class="div1-3">
         <h2 style = "text-align: center;"> Configuration Information </h2>
         <p class = 'inrtxt3' id = configurationInfo> Total Cycles: 3 <br> Recipe: W </p> <!--can be changed-->
+        <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Device Info:</p>
+        <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!-- Can be changed -->
+        <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Version Info:</p>
+        <p class="inrtxt5" id="versionInfo">&emsp;Version 1.0</p> <!-- Can be changed -->
         <button class="inrbtn3" id="devMode" > Launch <br> Developer <br> Mode </button>
       </div>
 
@@ -203,7 +204,7 @@
   </div>
 
   <script type="text/javascript">
-    const ws = new WebSocket('ws://10.8.129.234:7071/ws');
+    const ws = new WebSocket('ws://10.74.80.164:7071/ws');
 
     //Declare data vectors for graphs and push initial values into them.
     var data = [];
@@ -235,6 +236,7 @@
         switch(msg.id){
           case "connect":
             console.log(msg.status);
+            document.getElementById('serverStatus').innerHTML =  "Server Status: <span style = 'color:#48c531;font-weight:bold;''> Connected </span>";
           break;
           case "cycledata":
             x = new Date();  // Get current time
@@ -253,7 +255,7 @@
                g.updateOptions( { 'file': data } );};
           break;
           case "PCRdata":
-            cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data.
+            cycleno = cycleno + 1; //Increase PCR cycle on receipt of PCR data. //msg.cycleno
               //Implements Num Cycles
               document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleno + "</span>";
             fam = msg.fam; //Retrieve FAM fluoresence.
@@ -327,6 +329,7 @@
       else {started = true;
         document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:#48c531;font-weight:bold;> &ensp;"
         + "In Progress" + "</span>";
+        //changeFile(); // Add this in when it works
         startStopPCR();}
       }
 
@@ -342,6 +345,7 @@
 
     var timeStartDisplay;
     var firstPress=true; //Start Time display conditional
+    var defaultFileName;
     // Start or stop the PCR depending on its current state.
     function startStopPCR() {
       if (firstPress)
@@ -350,15 +354,26 @@
         timeStartDisplay = timeStarted.toLocaleTimeString();
         document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
         timeStartDisplay.bold() + "</span>";
-        //This code alters the default file name. Not Sure if it belongs here.
-          var nameOfProject = document.getElementById("projName").value;
-          //alert(nameOfProject)
-          var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" + timeStarted.getFullYear().toString().slice(-2);
-          //alert(date);
-          var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
-          var dateTime = date+ "_" + time;
-          document.getElementById('filename').value = nameOfProject + "_" + dateTime;
-        firstPress = false;
+        //Not sure if the following code belongs here.
+        //This code alters the default file name.
+          if (String(document.getElementById("filename").value).trim().length == 0){
+            var nameOfProject = document.getElementById("projName").value;
+            //alert(nameOfProject)
+            var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" + timeStarted.getFullYear().toString().slice(-2);
+            //alert(date);
+            var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
+            var dateTime = date+ "_" + time;
+            defaultFileName = nameOfProject + "_" + dateTime;
+            document.getElementById('filename').value = defaultFileName;
+          }
+        //This code disables all major entry fields
+          document.getElementById('projName').disabled = true;
+          document.getElementById('opName').disabled = true;
+          document.getElementById('expName').disabled = true;
+          document.getElementById('comments').disabled = true;
+          document.getElementById("dropdown").style.pointerEvents = "none";
+            document.getElementById("dropdown").style.opacity = "0.6";
+          firstPress = false;
       }
       //alert("Machine Started/Stopped");
       var msg = {
@@ -377,9 +392,7 @@
 
     // Rewriting this to email the files to a chosen address. --> Bruh idk how to implement. Ask Nick
     function sendFiles() { // Change to email the files to a chosen address
-      //alert("This Works!");
-      changeFile();
-      alert("This Feature is Working.");
+      //alert("This Feature is Working.");
       var msg = {
         id: "sendemail"};
       ws.send(JSON.stringify(msg));}
@@ -397,7 +410,7 @@
 
     //opens a window prompt to confirm whether the user meant to quit the program.
     function quitConfirmation() {
-      let text = "Are you sure you want to close this website?\n\nPress 'OK' to confirm.";
+      let text = "\nAre you sure you want to close this website?\n\nPress 'OK' to confirm.";
       if (confirm(text) == true) {
         window.close(); //Add more things to this function
       } else {}
@@ -405,12 +418,46 @@
 
     //opens a window prompt to confirm whether the user meant to shutdown the server.
     function shutdownConfirmation() {
-      let text = "Are you sure you want to shutdown this Server?\nIf you do Nick will be mad.\n\nPress 'OK' to confirm.";
+      let text = "\nAre you sure you want to shutdown this Server?\nIf you do Nick will be mad.\n\nPress 'OK' to confirm.";
       //Edit before submit
       if (confirm(text) == true) {
         stopServer();
       } else {}
       }
+
+      //opens a window prompt to confirm whether the user meant to shutdown the server.
+      function startConfirmation() {
+        var displayFileName1;
+
+        if (String(document.getElementById("filename").value).trim().length == 0) {
+          var timeStarted1 = new Date();
+          var nameOfProject = document.getElementById("projName").value;
+          var date = ("0" + (timeStarted1.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted1.getDate().toString()).slice(-2)  + "-" + timeStarted1.getFullYear().toString().slice(-2);
+          var time = ("0" + timeStarted1.getHours()).slice(-2)  + "." +  ("0" + timeStarted1.getMinutes()).slice(-2);
+          var dateTime = date+ "_" + time;
+          displayFileName1 = nameOfProject + "_" + dateTime;
+        }
+          else{displayFileName1 = document.getElementById("filename").value;
+        }
+        let text = "Are you sure you want to start this PCR?\n\nYou will be starting this experiment with the following parameters:\n" + "Save Data Filename: " +
+        displayFileName1  + "\nOperator Name: " + document.getElementById("opName").value + "\nExperiment Name: " + document.getElementById("expName").value +
+        "\nRecipe: " + a.innerHTML + "\n\nPress 'OK' to confirm.";
+        //let text = "Are you sure you want to start this PCR?\n\nYou will be starting this experiment with the following parameters:\n\n
+        //"Operator Name: " + opName + "\nExperiment Name: " + expName + "\nRecipe: " + "\n\nPress 'OK' to confirm.";
+        //Edit before submit
+        if (confirm(text) == true) {
+          startPCR();
+        } else {}
+        }
+
+        //opens a window prompt to confirm whether the user meant to shutdown the server.
+        function stopConfirmation() {
+          let text = "\nAre you sure you want to stop this PCR? \n\n If you do, the experiment will end.";
+          //Edit before submit
+          if (confirm(text) == true) {
+            stopPCR();
+          } else {}
+          }
 
       //Calculates Estimated Finish time
       function estFinishTime(data)
@@ -440,7 +487,7 @@
       document.getElementById(contentid).style.display = "block";
       evt.currentTarget.className += " active"; }
 
-    document.getElementById("tab1").click(); //By Default, the first tab is shown.
+      document.getElementById("tab1").click(); //By Default, the first tab is shown.
 
     // Code for the dropdown on the first page starts
     var x, i, j, l, ll, selElmnt, a, b, c;
@@ -498,6 +545,9 @@
           closeAllSelect(this);
           this.nextSibling.classList.toggle("select-hide");
           this.classList.toggle("select-arrow-active");
+          //alert( document.getElementsByClassName("select-selected"));
+          //alert(a.innerHTML)
+          //alert(document.getElementById("filename").value)
         });
     }
 
