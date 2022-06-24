@@ -38,8 +38,8 @@
 
   /* grids/layputs for each tab */
   .container1 {display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.4fr;
+  grid-template-columns: 0.75fr 0.75fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
+  grid-template-rows: 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr 0.4fr;
   grid-column-gap: 8px;
   grid-row-gap: 8px;}
   .div1-1 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px} /*left content */
@@ -48,8 +48,8 @@
   .div4-1 { grid-area: 6 / 1 / 8 / 11; border-style:solid; border-width: 2px;} /*bottom content */
 
   .container2 {display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 0.4fr;
+  grid-template-columns: 0.75fr 0.75fr 1fr 1fr 1fr 1fr 1fr 1fr 0.75fr 0.75fr;
+  grid-template-rows: 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr 0.4fr;
   grid-column-gap: 8px;
   grid-row-gap: 8px;} /*same grid as container1*/
   .div1-2 { grid-area: 1 / 1 / 6 / 3; border-style:solid; border-width: 2px}
@@ -115,7 +115,7 @@
         </div>
       </div>
 
-      <div class="div2-1" id="graphDiv" style="width:1020px; height:520px; display:block!important;"></div> <!--graph goes here-->
+      <div class="div2-1" id="graphDiv" style="width:100%; height:100%; display:block!important;"></div> <!--graph goes here-->
 
       <div class="div3-1">
         <button class="inrbtn" id="startPCR" style=""> Start PCR </button>
@@ -154,7 +154,7 @@
         <p class="inrtxt5" id="versionInfo">&emsp;Version 1.0</p> <!-- Can be changed -->
       </div>
 
-      <div class="div2-2" id="divPCR" style="width:1020px; height:520px; display:block!important;"> </div> <!--graph goes here-->
+      <div class="div2-2" id="divPCR" style="width:100%; height:100%; display:block!important;"> </div> <!--graph goes here-->
 
       <div class="div3-2" style = "text-align:center;">
         <p class="inrtxt4"  style = "margin-bottom: 30px;">Save Data Filename:</p>
