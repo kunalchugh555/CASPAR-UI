@@ -138,15 +138,15 @@
 
       <div class="div1-2">
         <p class="inrtxt4" style="font-weight:bold; text-align: center; margin-top: 20px;">Experiment Info:</p>
-          <p class="inrtxt7" id="esStatus" style="font-size:105%;"> Status: Not Running <br></p>  <!--Changes-->
-          <p class="inrtxt7" id="esErrors" style="font-size:105%;"> Errors: No Errors Found <br> </p>  <!--Changing will be implemented-->
-          <p class="inrtxt7" id="esConfig" style="font-size:105%;"> Configuration: - <br> </p>  <!--Changes-->
-          <p class="inrtxt7" id="esProj" style="font-size:105%;"> Project Name: - <br> </p>  <!--Changes-->
-          <p class="inrtxt7" id="esExp" style="font-size:105%;"> Experiment Name: - <br> </p>  <!--Changes-->
-          <p class="inrtxt7" id="esOpName" style="font-size:105%;"> Operator Name: - <br> </p>  <!--Changes-->
-          <p class="inrtxt7" id="esStart" style="font-size:105%;"> Start Time: - <br>  </p>  <!--Changes-->
-          <p class="inrtxt7" id="esEstFin" style="font-size:105%;"> Est. Finish Time: - <br> </p>  <!--Changing will be implemented-->
-          <p class="inrtxt7" id="esFin" style="font-size:105%;"> Finish Time: - <br> </p>  <!--Changes-->
+          <p class="inrtxt7" id="esStatus" style="font-size:105%;"> <span style = "text-decoration: underline;"> Status: </span> Not Running <br></p>  <!--Changes-->
+          <p class="inrtxt7" id="esErrors" style="font-size:105%;"> <span style = "text-decoration: underline;"> Errors:</span> No Errors Found <br> </p>  <!--Changing will be implemented-->
+          <p class="inrtxt7" id="esConfig" style="font-size:105%;"> <span style = "text-decoration: underline;"> Configuration:</span> - <br> </p>  <!--Changes-->
+          <p class="inrtxt7" id="esProj" style="font-size:105%;"> <span style = "text-decoration: underline;"> Project Name:</span> - <br> </p>  <!--Changes-->
+          <p class="inrtxt7" id="esExp" style="font-size:105%;"> <span style = "text-decoration: underline;"> Experiment Name:</span> - <br> </p>  <!--Changes-->
+          <p class="inrtxt7" id="esOpName" style="font-size:105%;"> <span style = "text-decoration: underline;"> Operator Name:</span> - <br> </p>  <!--Changes-->
+          <p class="inrtxt7" id="esStart" style="font-size:105%;"> <span style = "text-decoration: underline;"> Start Time:</span> - <br>  </p>  <!--Changes-->
+          <p class="inrtxt7" id="esEstFin" style="font-size:105%;"> <span style = "text-decoration: underline;"> Est. Finish Time:</span> - <br> </p>  <!--Changing will be implemented-->
+          <p class="inrtxt7" id="esFin" style="font-size:105%;"> <span style = "text-decoration: underline;"> Finish Time:</span> - <br> </p>  <!--Changes-->
       </div>
 
       <div class="div2-2" id="divCYC" style="width:100%; height:100%; display:block;"> </div> <!--graph goes here-->
@@ -174,10 +174,10 @@
 
       <div class="div1-3">
         <h2 style = "text-align: center;"> Configuration Information </h2>
-          <p class = 'inrtxt7' id="ciconfig" > Configuration Name: Default <br> </p> <!--Changes-->
-          <p class = 'inrtxt7' id="ciopName" > Default Operator Name: <br> </p> <!--Changes-->
-          <p class = 'inrtxt7' id="ciemail" > Default Email: <br> </p> <!--Changes-->
-          <p class = 'inrtxt7' id="ciprojName" > Default Project Name: <br> </p> <!--Changes-->
+          <p class = 'inrtxt7' id="ciconfig"> <span style = "text-decoration: underline;"> Configuration Name:</span> Default <br> </p> <!--Changes-->
+          <p class = 'inrtxt7' id="ciopName"> <span style = "text-decoration: underline;"> Default Operator Name:</span> <br> </p> <!--Changes-->
+          <p class = 'inrtxt7' id="ciemail"> <span style = "text-decoration: underline;"> Default Email:</span> <br> </p> <!--Changes-->
+          <p class = 'inrtxt7' id="ciprojName"> <span style = "text-decoration: underline;"> Default Project Name:</span> <br> </p> <!--Changes-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Device Info:</p>
           <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!--Hardcoded-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Version Info:</p>
@@ -280,7 +280,9 @@
     var dropdownID = document.getElementById("configDropdown"); //important because we reference the inner text in the dropdown very often
     var namearray; //will be used for save configuration safety
     var clientPressedStart = false; // Keeps Track of if the client pressed start. NOT the same as isRunning, which tracks whether or not the sysem is on.
-
+    var senddefproj; //to send
+    var senddefop; //to send
+    var senddefem; //to send
     // Handles the events coming from the websocket. Format switches off the id blank on the json variable being sent.
     ws.onmessage = function(event){
       var msg = JSON.parse(event.data);
@@ -291,18 +293,16 @@
             isRunning = msg.running;
             console.log(msg.status);
               document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
-              //Changes Server Status
-            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename);
 
             //Changes the System Status based on the isRunning variable
             if (isRunning == "true"){
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
               + "In Progress" + "</span>";
-              document.getElementById("esStatus").innerHTML = "Status: In Progress";}
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";}
             else if(isRunning == "false"){
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
               + "Not Running" + "</span>";
-              document.getElementById("esStatus").innerHTML = "Status: Not Running";}
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> Not Running";}
 
             //This code extracts all the configuration names and puts it in the dropdown on the first page
             var allnames = (msg.configs).substring(5);
@@ -311,11 +311,13 @@
             let select = document.getElementById('configDropdown');
               for (var i=0; i<count; i++){
                 var option = document.createElement("option");
-                option.text = namearray[i];
-                option.value = "namearray[i]";
-                option.id = "namearray[i]";
+                option.text = namearray[i].trim();
+                option.value = String(namearray[i].trim());
+                option.id = String(namearray[i].trim());
                 select.add(option);
               }
+
+            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename, msg.defproj, msg.defop, msg.defem);
           break;
 
           case "loadconfig": //loads the config that is selected on the dropdown on the first page
@@ -325,9 +327,12 @@
             document.getElementById("opName").value = dataarray[0].substring(6).trim();
             document.getElementById('email').value = dataarray[1].substring(6).trim();
             //Updates info on third tab
-            document.getElementById("ciprojName").innerHTML = "Default Project Name: " + dataarray[2].substring(6).trim();
-            document.getElementById("ciopName").innerHTML = "Default Operator Name: " + dataarray[0].substring(6).trim();
-            document.getElementById('ciemail').innerHTML = "Default Email: " + dataarray[1].substring(6).trim();
+            document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + dataarray[2].substring(6).trim();
+            document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + dataarray[0].substring(6).trim();
+            document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + dataarray[1].substring(6).trim();
+            senddefproj = dataarray[2].substring(6).trim();
+            senddefop = dataarray[0].substring(6).trim();
+            senddefem = dataarray[1].substring(6).trim();
           break;
 
           case "PCRdata": //In the future, msg.cycleNo will give us the real cycleNo
@@ -344,7 +349,7 @@
             if (isRunning == "true"){
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
                 + "In Progress" + "</span>";
-              document.getElementById("esStatus").innerHTML = "Status: In Progress";}
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";}
             else if(isRunning == "false"){
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
                 + "Not Running" + "</span>";
@@ -370,11 +375,11 @@
             if (isRunning == "true"){
                document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
                + "In Progress" + "</span>";
-               document.getElementById("esStatus").innerHTML = "Status: In Progress";}
+               document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'>Status:</span> In Progress";}
             else if(isRunning == "false"){
                document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
                + "Not Running" + "</span>";
-               document.getElementById("esStatus").innerHTML = "Status: In Progress";}
+               document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'>Status:</span> In Progress";}
           break;
 
           default:
@@ -384,9 +389,10 @@
 //Functions Begin
 
       //Updates the UI when it connects, whether in the middle of an experiment or initially.
-      function onConnect(run, start, project, operator, experiment, config, comments, filename){
+      function onConnect(run, start, project, operator, experiment, config, comments, filename, saveddefproj, saveddefop, saveddefem){
         if(run == "true"){
           //Updates major values
+          dropdownID.value = config;
           document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
           start.bold() + "</span>";
           document.getElementById("projName").value = project;
@@ -394,13 +400,20 @@
           document.getElementById('expName').value = experiment;
           document.getElementById('comments').value = comments;
           document.getElementById('filename').value = filename;
-          dropdownID.value = config;
+
           //Updates values in tab 2: experiment info
-          document.getElementById("esConfig").innerHTML = "Configuration: " + config;
-          document.getElementById("esProj").innerHTML = "Project Name: " + project;
-          document.getElementById("esExp").innerHTML = "Experiment Name: " + experiment;
-          document.getElementById("esOpName").innerHTML = "Operator Name: " + operator;
-          document.getElementById("esStart").innerHTML = "Start Time: " + start;
+          document.getElementById("esConfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration:</span>" + " "  + config;
+          document.getElementById("esProj").innerHTML = "<span style = 'text-decoration: underline;'> Project Name:</span>" + " "  + project;
+          document.getElementById("esExp").innerHTML = "<span style = 'text-decoration: underline;'> Experiment Name:</span>" + " "  + experiment;
+          document.getElementById("esOpName").innerHTML = "<span style = 'text-decoration: underline;'> Operator Name:</span>" + " "  + operator;
+          document.getElementById("esStart").innerHTML = "<span style = 'text-decoration: underline;'> Start Time:</span>" + " "  + start;
+
+          //Updates values in tab 3
+          document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configruation Name:</span>" + " " + dropdownID.options[dropdownID.selectedIndex].text;
+          document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + saveddefproj;
+          document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + saveddefop;
+          document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + saveddefem;
+
           //Disables inputs
           document.getElementById('projName').disabled = true;
           document.getElementById('opName').disabled = true;
@@ -418,7 +431,7 @@
 
        //This function sends the server a request to view and eventually display the information for a certain configuration thats clicked
        function loadDataRequest(){
-         document.getElementById("ciconfig").innerHTML = "Configuration Name: " + dropdownID.options[dropdownID.selectedIndex].text;
+         document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configruation Name:</span>" + " " + dropdownID.options[dropdownID.selectedIndex].text;
          var msg = {
            id: "configrequest",
            config: dropdownID.options[dropdownID.selectedIndex].text,
@@ -507,7 +520,7 @@
         timeStartDisplay = timeStarted.toLocaleTimeString();
         document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
         timeStartDisplay.bold() + "</span>";
-        document.getElementById("esStart").innerHTML = "Start Time: " + timeStartDisplay;
+        document.getElementById("esStart").innerHTML = "<span style = 'text-decoration: underline;'> Start Time:</span>" + " " + timeStartDisplay;
         document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;  &emsp; &emsp; -" + "</span>";
         //This code alters the default file name.
           if (String(document.getElementById("filename").value).trim().length == 0){
@@ -545,10 +558,10 @@
           clientPressedStart = false;
 
           //updates the info on the second tab info
-          document.getElementById("esConfig").innerHTML = "Configuration: " + dropdownID.options[dropdownID.selectedIndex].text;
-          document.getElementById("esProj").innerHTML = "Project Name: " + document.getElementById("projName").value;
-          document.getElementById("esExp").innerHTML = "Experiment Name: " + document.getElementById('expName').value;
-          document.getElementById("esOpName").innerHTML = "Operator Name: " + document.getElementById("opName").value;
+          document.getElementById("esConfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration:</span>" + " "  + dropdownID.options[dropdownID.selectedIndex].text;
+          document.getElementById("esProj").innerHTML = "<span style = 'text-decoration: underline;'> Project Name:</span>" + " "  + document.getElementById("projName").value;
+          document.getElementById("esExp").innerHTML = "<span style = 'text-decoration: underline;'> Experiment Name:</span>" + " "  + document.getElementById('expName').value;
+          document.getElementById("esOpName").innerHTML = "<span style = 'text-decoration: underline;'> Operator Name:</span>" + " "  + document.getElementById("opName").value;
 
           //Sends important data to server for storage (for safety reasons incase client leaves)
           let msg = {
@@ -559,7 +572,10 @@
             experimentName: document.getElementById('expName').value,
             config: dropdownID.options[dropdownID.selectedIndex].text,
             comments: document.getElementById('comments').value,
-            filename: document.getElementById('filename').value
+            filename: document.getElementById('filename').value,
+            defproj: senddefproj,
+            defop: senddefop,
+            defem: senddefem,
           };
           ws.send(JSON.stringify(msg)); //sends message
 
@@ -593,7 +609,7 @@
       timeFinishDisplay = timeFinished.toLocaleTimeString();
       document.getElementById("finTime").innerHTML =  "<br> Finish Time: <br> <br> <span style=font-size:110%> &emsp;" +
       timeFinishDisplay.bold() + "</span>";
-      document.getElementById("esFin").innerHTML =  "Finish Time: " +
+      document.getElementById("esFin").innerHTML =  "<span style = 'text-decoration: underline;'> Finish Time:</span> " + " " +
       timeFinishDisplay;
 
       var msg = {
@@ -626,6 +642,7 @@
               id: "sendemail",
               address: (String(document.getElementById("email").value))};
             ws.send(JSON.stringify(msg));
+            alert("\nEmail sent!")
           }
         }
         else{
@@ -649,7 +666,7 @@
             alert("\nThis configuration name already exists");
             return false;}
         else if (namesJustGiven.includes(String(document.getElementById("configName").value.trim()))){
-            alert("\nThis configuration name was already created recently");
+            alert("\nThis configuration name has already been created.");
             return false;}
           else {return true;}
       }
@@ -667,6 +684,7 @@
             defaultproject: String(document.getElementById("defProjName").value),
             };
           ws.send(JSON.stringify(msg));
+          alert("\nConfiguration Saved! \n\nPlease reload the page to update the system.")
         }
       }
 
@@ -706,10 +724,12 @@
       //This function should only be called when Download Data is pressed.
       function downloadData(){
         if(runFinished){
-
+          var msg = {
+            id: "downloadDataRequest",};
+          ws.send(JSON.stringify(msg));
         }
         else{
-          alert("Please wait for the run to be finished.");
+          alert("\nPlease wait for the run to be finished.");
         }
       }
 
