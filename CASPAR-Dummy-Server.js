@@ -27,6 +27,15 @@ var savedExperimentName = "";
 var savedConfig = "";
 var savedComments = "";
 var savedFileName = "";
+var configs = [];
+//Kunal: default value
+var Default = {
+    nameDisplay: "Default",
+    operatorDisplay: "",
+    emailDisplay: "",
+    projectDisplay: "",
+}
+configs.push(Default);
 
 // WebSocket initialization upon client connection and declaration of events for handling WS messages from the client.
 wss.on('connection', function connection(ws) {
@@ -88,6 +97,18 @@ wss.on('connection', function connection(ws) {
                 savedConfig = msg.config;
                 savedComments = msg.comments;
                 savedFileName = msg.filename;
+                break;
+            //Kunal: new case: saveconfiguration
+            case "saveconfiguration":
+                let varname = msg.name;
+                var config = {
+                    nameDisplay: varname,
+                    operatorDisplay: msg.defaultoperator,
+                    emailDisplay: msg.defaultemail,
+                    projectDisplay: msg.defaultproject,
+                }
+                configs.push(config);
+
                 break;
             case "sendemail":
                 // Retrieve filenames from engine, and send them to an email address.
