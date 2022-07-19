@@ -6,11 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"> <!--scales to client device size-->
   <title> CASPAR </title>
 
-  <script src="https://www.puck-js.com/puck.js"></script>
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.css" />
+  <script src="http://192.168.0.10/src/jquery-1.9.1.min.js"></script>
+  <script src="http://192.168.0.10/src/jquery-3.5.1.min.js"></script>
+  <script src="http://192.168.0.10/src/dygraph.js"></script>
+  <link rel="stylesheet" href="http://192.168.0.10/src/dygraph.css" />
 
 <style>
   /* Purely stylistic so it looks pretty */
@@ -181,7 +180,7 @@
           <p class = 'inrtxt7' id="ciFAM"> <span style = "text-decoration: underline;"> FAM:</span> <br> </p> <!--Changes-->
           <p class = 'inrtxt7' id="ciCY5"> <span style = "text-decoration: underline;"> CY5:</span> <br> </p> <!--Changes-->
           <p class = 'inrtxt7' id="ciHEX"> <span style = "text-decoration: underline;"> HEX:</span> <br> </p> <!--Changes-->
-          <p class = 'inrtxt7' id="ciRT"> <span style = "text-decoration: underline;"> RT Step On?:</span> <br> </p> <!--Changes-->
+          <p class = 'inrtxt7' id="ciRT"> <span style = "text-decoration: underline;"> Reverse Transcription On?:</span> <br> </p> <!--Changes-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Device Info:</p>
           <p class="inrtxt5" id="deviceInfo">&emsp;Model 1.0</p> <!--Hardcoded-->
         <p class="inrtxt4" style="font-weight:bold; text-align: left; margin-left: 10px;">Version Info:</p>
@@ -204,17 +203,17 @@
               <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
               <!--NEW Code-->
           <p class = 'inrtxt6' style= "display: inline-block;"> <br> FAM: </p>
-            <input class = "inrinp2" type="text" id="FAM" value = " "> <!--Value Can Change-->
-              <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
-          <p class = 'inrtxt6' style= "display: inline-block;"> <br> CY5: </p>
-            <input class = "inrinp2" type="text" id="CY5" value = " "> <!--Value Can Change-->
-              <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
-          <p class = 'inrtxt6' style= "display: inline-block;"> <br> HEX: </p>
-            <input class = "inrinp2" type="text" id="HEX" value = " "> <!--Value Can Change-->
-              <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
-          <p class = 'inrtxt6' style= "display: inline-block;"> <br> RT On: </p>
-            <input type="checkbox" id="RT" style="display: inline; width: 23px; height:23px; border-width: 1px; margin-right: 4px; margin-top: 5px;"> <!--Value Can Change-->
-              <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
+          <input class = "inrinp2" type="text" id="FAM" value = " "> <!--Value Can Change-->
+            <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
+        <p class = 'inrtxt6' style= "display: inline-block;"> <br> CY5: </p>
+          <input class = "inrinp2" type="text" id="CY5" value = " "> <!--Value Can Change-->
+            <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
+        <p class = 'inrtxt6' style= "display: inline-block;"> <br> HEX: </p>
+          <input class = "inrinp2" type="text" id="HEX" value = " "> <!--Value Can Change-->
+            <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
+        <p class = 'inrtxt6' style= "display: inline-block;"> <br> RT On: </p>
+          <input type="checkbox" id="RT" style="display: inline; width: 23px; height:23px; border-width: 1px; margin-right: 4px; margin-top: 5px;"> <!--Value Can Change-->
+            <div style="width:100%; height:1px; margin: auto;" style= "display: block;"></div>
 
         <button class="inrbtn3" id="saveConfig" onclick="saveConfig()" style= "display: inline; float:left; margin-left: 70px;
           margin-bottom: 20px;"> Save <br> This <br> Configuration </button>
@@ -226,7 +225,7 @@
   </div>
 
   <script>
-    const ws = new WebSocket('ws://10.68.206.224:7071/ws'); //Address can change. Hardcoded
+    const ws = new WebSocket('ws://192.168.0.10:7071/ws'); //Address can change. Hardcoded
 
     //We will start by declaring major variables
     //Declare data vectors for graphs and push initial values into them.
@@ -267,7 +266,7 @@
           drawPoints: true,
           showRoller: true,
           digitsAfterDecimal: 3,
-          dateWindow: [0,40], //This locks the x axis to 0-40.
+          dateWindow: [0,50], //This locks the x axis to 0-40.
           showRangeSelector: true,
           axisLabelFontSize: 14,
     });
@@ -321,10 +320,10 @@
 
           case "pong":
             pongRecieved = true;
-            document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
           break;
 
           case "connect":
+            console.log(msg);
             sendPing = setInterval(sendThePing, 10000); //Every 10 seconds, a ping is sent
 
             //Logs if the system is running and changes the website
@@ -333,19 +332,25 @@
               document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
 
             //Changes the System Status based on the isRunning variable
-            if (isRunning == "true"){
+            if (isRunning == true)
+            {
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
               + "In Progress" + "</span>";
-              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";}
-            else if(isRunning == "false"){
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";
+            }
+            else if(isRunning == false)
+            {
               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
               + "Not Running" + "</span>";
-              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> Not Running";}
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> Not Running";
+            }
 
-            //This code extracts all the configuration names and puts it in the dropdown on the first page
-            var allnames = (msg.configs).substring(5);
+            //This code extracts all the configuration names and puts it in the dropdown on the first page -- Replaced with JSON, NAS 7/07
+            /*var allnames = (msg.configs).substring(5);
             var count = (((allnames.match(/:;:;:/g) || []).length)+1);
-            namearray = allnames.split(":;:;:");
+            namearray = allnames.split(":;:;:");*/
+            var count = msg.configs.length;
+            namearray = msg.configs;
             let select = document.getElementById('configDropdown');
               for (var i=0; i<count; i++){
                 var option = document.createElement("option");
@@ -355,59 +360,74 @@
                 select.add(option);
               }
 
-            onConnect(msg.running, msg.starttime, msg.projectname, msg.operatorname, msg.experimentname, msg.configname, msg.comments, msg.filename, msg.defproj, msg.defop, msg.defem, msg.fam, msg.cy5, msg.hex, msg.rt);
+            onConnect(msg); // Replaced with calls in the function itself--should make it easier to scale. NAS 7/8/22
+            if(msg.FAMdata.length > 0)
+            {
+              for(var i = 0; i < msg.FAMdata.length; i++)
+              {
+                data2.push([i+1, msg.FAMdata[i], msg.HEXdata[i], msg.cy5data[i]]); //Push the new data onto the graph source.
+              }
+              pcr.updateOptions( {'file': data2 } ); //Update it.
+            }
           break;
 
           case "loadconfig": //loads the config that is selected on the dropdown on the first page
-            var dataarray = msg.data.split(":;:;:"); //graps all data and puts it in an array
             console.log(msg);
+            //var dataarray = msg.data.split(":;:;:"); //graps all data and puts it in an array
+            var dataarray = msg.data;
             //Updates info on first and second tabs
-            document.getElementById("projName").value = dataarray[2].substring(6).trim();
-            document.getElementById("opName").value = dataarray[0].substring(6).trim();
-            document.getElementById('email').value = dataarray[1].substring(6).trim();
+            document.getElementById("projName").value = dataarray[2];
+            document.getElementById("opName").value = dataarray[0];
+            document.getElementById('email').value = dataarray[1];
             //Updates info on third tab
-            document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + dataarray[2].substring(6).trim();
-            document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + dataarray[0].substring(6).trim();
-            document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + dataarray[1].substring(6).trim();
-            document.getElementById('ciFAM').innerHTML = "<span style = 'text-decoration: underline;'> FAM:</span>" + " " + dataarray[3].substring(6).trim();
-            document.getElementById('ciCY5').innerHTML = "<span style = 'text-decoration: underline;'> CY5:</span>" + " " + dataarray[4].substring(6).trim();
-            document.getElementById('ciHEX').innerHTML = "<span style = 'text-decoration: underline;'> HEX:</span>" + " " + dataarray[5].substring(6).trim();
-            document.getElementById('ciRT').innerHTML = "<span style = 'text-decoration: underline;'> RT Step On?:</span>" + " " + dataarray[6].substring(6).trim();
-            senddefproj = dataarray[2].substring(6).trim();
-            senddefop = dataarray[0].substring(6).trim();
-            senddefem = dataarray[1].substring(6).trim();
-            sendfam = dataarray[3].substring(6).trim();
-            sandcy5 = dataarray[4].substring(6).trim();
-            sendhex = dataarray[5].substring(6).trim();
-            sendrt = dataarray[6].substring(6).trim();
+            document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + dataarray[2];
+            document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + dataarray[0];
+            document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + dataarray[1];
+            document.getElementById('ciFAM').innerHTML = "<span style = 'text-decoration: underline;'> FAM:</span>" + " " + dataarray[3];
+            document.getElementById('ciCY5').innerHTML = "<span style = 'text-decoration: underline;'> CY5:</span>" + " " + dataarray[4];
+            document.getElementById('ciHEX').innerHTML = "<span style = 'text-decoration: underline;'> HEX:</span>" + " " + dataarray[5];
+            document.getElementById('ciRT').innerHTML = "<span style = 'text-decoration: underline;'> RT Step On?:</span>" + " " + dataarray[6];
+            senddefproj = dataarray[2];
+            senddefop = dataarray[0];
+            senddefem = dataarray[1];
+            sendfam = dataarray[3];
+            sendcy5 = dataarray[4];
+            sendhex = dataarray[5];
+            sendrt = dataarray[6];
             document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
           break;
 
-          case "PCRdata": //In the future, msg.cycleNo will give us the real cycleNo
-            isRunning = msg.running;
-            cycleNo = cycleNo + 1; //Increase PCR cycle on receipt of PCR data.
-              document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleNo + "</span>"; //Changes Cycle Number
+          case "isRunning":
+            isRunning = msg.value;
+            //Changes the System Status based on the isRunning variable
+            if (isRunning == true)
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
+                + "In Progress" + "</span>";
+              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";
+            }
+            else if(isRunning == false)
+            {
+              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
+                + "Not Running" + "</span>";
+              document.getElementById("esStatus").innerHTML = "Status: Not Running";
+            }
+
+            document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
+          break;
+
+
+          case "PCRdata": //In the future, msg.cycleNo will give us the real cycleNo -- NS: Done June 28th 2022
+            cycleNo = msg.cycle; //Increase PCR cycle on receipt of PCR data.
+            document.getElementById("currentCycle").innerHTML =  "<span style='font-weight:bold; font-size:110%'>" + cycleNo + "</span>"; //Changes Cycle Number
             fam = msg.fam; //Retrieve FAM fluoresence.
             cy5 = msg.cy5; //Retrieve Cy5 fluoresence.
             hex = msg.hex; //Retrieve HEX fluoresence.
             data2.push([cycleNo, fam, hex, cy5]); //Push the new data onto the graph source.
             pcr.updateOptions( {'file': data2 } ); //Update it.
-
-              //Changes the System Status based on the isRunning variable
-            if (isRunning == "true"){
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-                + "In Progress" + "</span>";
-              document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'> Status:</span> In Progress";}
-            else if(isRunning == "false"){
-              document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-                + "Not Running" + "</span>";
-              document.getElementById("esStatus").innerHTML = "Status: Not Running";}
-
-            document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
           break;
 
           case "cycledata":
-            isRunning = msg.running;
             x = new Date();  // Get current time
             y = msg.fluor; // Get fluoresence.
             temp = msg.temp; // Get temperature.
@@ -420,19 +440,11 @@
             if(y > -100)
               {data.push([x,y,temp]);
                cyc.updateOptions( { 'file': data } );}
-
-            //Changes the System Status based on the isRunning variable
-            if (isRunning == "true"){
-               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;color:LimeGreen;font-weight:bold;> &ensp;"
-               + "In Progress" + "</span>";
-               document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'>Status:</span> In Progress";}
-            else if(isRunning == "false"){
-               document.getElementById("systemStatus").innerHTML = "<br> System Status: <br> <br> <span style=font-size:110%;font-weight:bold;> &ensp;"
-               + "Not Running" + "</span>";
-               document.getElementById("esStatus").innerHTML = "<span style = 'text-decoration: underline;'>Status:</span> In Progress";}
-
-            document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'color:LimeGreen;font-weight:bold;''> Connected </span>";
           break;
+
+          case "runcomplete":
+            finishRun();
+            break;
 
           default:
             console.log(msg); //If the message doesn't match any of our cases, log the message in the console.
@@ -442,6 +454,7 @@
       ws.onclose = function (event) {
         document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'font-weight:bold;color: tomato;'> Not Connected </span>";
         console.log('The connection has been closed successfully.');
+        clearInterval(sendPing);
       };
 
 //Functions Begin
@@ -453,7 +466,7 @@
         };
         try{ //try it first
           ws.send(JSON.stringify(msg));
-          verifyPong = setInterval(verifyThePong, 15000);
+          verifyPong = setTimeout(verifyThePong, 15000);
         }
        catch (error){ //if it doesn't work, the client prolly doesnt have internet. Throw an error.
           document.getElementById('serverStatus').innerHTML = "Server Status: <span style = 'font-weight:bold; color: tomato;'> Not Connected </span>";
@@ -471,39 +484,37 @@
           clearInterval(sendPing);
         }
         pongRecieved = false;
-        clearInterval(verifyPong);
       }
 
-      //Updates the UI when it connects, whether in the middle of an experiment or initially.
-      function onConnect(run, start, project, operator, experiment, config, comments, filename, saveddefproj, saveddefop, saveddefem, savedfam, savedcy5, savedhex, savedrt){
-        if(run == "true")
-        {
+      //Updates the UI when it connects, whether in the middle of an experiment or initially. Updated to use preexisting JSON--NAS 7/08/22
+      function onConnect(msg){
+        if(msg.running == true){
           //Updates major values
-          dropdownID.value = config;
+          dropdownID.value = msg.configname;
           document.getElementById("startTime").innerHTML =  "<br> Start Time: <br> <br> <span style=font-size:110%> &ensp;" +
-          start.bold() + "</span>";
-          document.getElementById("projName").value = project;
-          document.getElementById("opName").value = operator;
-          document.getElementById('expName').value = experiment;
-          document.getElementById('comments').value = comments;
-          document.getElementById('filename').value = filename;
+          msg.starttime.bold() + "</span>";
+          document.getElementById("projName").value = msg.projectname;
+          document.getElementById("opName").value = msg.operatorname;
+          document.getElementById('expName').value = msg.experimentname;
+          document.getElementById('comments').value = msg.comments;
+          document.getElementById('filename').value = msg.filename;
 
           //Updates values in tab 2: experiment info
-          document.getElementById("esConfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration:</span>" + " "  + config;
-          document.getElementById("esProj").innerHTML = "<span style = 'text-decoration: underline;'> Project Name:</span>" + " "  + project;
-          document.getElementById("esExp").innerHTML = "<span style = 'text-decoration: underline;'> Experiment Name:</span>" + " "  + experiment;
-          document.getElementById("esOpName").innerHTML = "<span style = 'text-decoration: underline;'> Operator Name:</span>" + " "  + operator;
-          document.getElementById("esStart").innerHTML = "<span style = 'text-decoration: underline;'> Start Time:</span>" + " "  + start;
+          document.getElementById("esConfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration:</span>" + " "  + msg.configname;
+          document.getElementById("esProj").innerHTML = "<span style = 'text-decoration: underline;'> Project Name:</span>" + " "  + msg.projectname;
+          document.getElementById("esExp").innerHTML = "<span style = 'text-decoration: underline;'> Experiment Name:</span>" + " "  + msg.experimentname;
+          document.getElementById("esOpName").innerHTML = "<span style = 'text-decoration: underline;'> Operator Name:</span>" + " "  + msg.operatorname;
+          document.getElementById("esStart").innerHTML = "<span style = 'text-decoration: underline;'> Start Time:</span>" + " "  + msg.starttime;
 
           //Updates values in tab 3
-          document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration Name:</span>" + " " + dropdownID.options[dropdownID.selectedIndex].text;
-          document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + saveddefproj;
-          document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + saveddefop;
-          document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + saveddefem;
-          document.getElementById('ciFAM').innerHTML = "<span style = 'text-decoration: underline;'> FAM:</span>" + " " + savedfam;
-          document.getElementById('ciCY5').innerHTML = "<span style = 'text-decoration: underline;'> CY5:</span>" + " " + savedcy5;
-          document.getElementById('ciHEX').innerHTML = "<span style = 'text-decoration: underline;'> HEX:</span>" + " " + savedhex;
-          document.getElementById('ciRT').innerHTML = "<span style = 'text-decoration: underline;'> RT:</span>" + " " + savedrt;
+          document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration Name:</span>" + " " + msg.configname;
+          document.getElementById("ciprojName").innerHTML = "<span style = 'text-decoration: underline;'> Default Project Name:</span>" + " " + msg.defproj;
+          document.getElementById("ciopName").innerHTML = "<span style = 'text-decoration: underline;'> Default Operator Name:</span>" + " " + msg.defop;
+          document.getElementById('ciemail').innerHTML = "<span style = 'text-decoration: underline;'> Default Email:</span>" + " " + msg.defem;
+          document.getElementById('ciFAM').innerHTML = "<span style = 'text-decoration: underline;'> FAM:</span>" + " " + msg.fam;
+          document.getElementById('ciCY5').innerHTML = "<span style = 'text-decoration: underline;'> CY5:</span>" + " " + msg.cy5;
+          document.getElementById('ciHEX').innerHTML = "<span style = 'text-decoration: underline;'> HEX:</span>" + " " + msg.hex;
+          document.getElementById('ciRT').innerHTML = "<span style = 'text-decoration: underline;'> RT:</span>" + " " + msg.rt;
 
           //Disables inputs
           document.getElementById('projName').disabled = true;
@@ -522,7 +533,7 @@
 
        //This function sends the server a request to view and eventually display the information for a certain configuration thats clicked
        function loadDataRequest(){
-         document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configruation Name:</span>" + " " + dropdownID.options[dropdownID.selectedIndex].text;
+         document.getElementById("ciconfig").innerHTML = "<span style = 'text-decoration: underline;'> Configuration Name:</span>" + " " + dropdownID.options[dropdownID.selectedIndex].text;
          var msg = {
            id: "configrequest",
            config: dropdownID.options[dropdownID.selectedIndex].text,
@@ -562,9 +573,9 @@
                   var nameOfProject = document.getElementById("projName").value;
                   var date = ("0" + (timeStarted1.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted1.getDate().toString()).slice(-2)  + "-" +
                     timeStarted1.getFullYear().toString().slice(-2);
-                  //var time = ("0" + timeStarted1.getHours()).slice(-2)  + "." +  ("0" + timeStarted1.getMinutes()).slice(-2);
-                  //var dateTime = date+ "_" + time;
-                  displayFileName1 = nameOfProject + "_" + date;
+                  // var time = ("0" + timeStarted1.getHours()).slice(-2)  + "." +  ("0" + timeStarted1.getMinutes()).slice(-2);
+                  // var dateTime = date+ "_" + time;
+                  displayFileName1 = nameOfProject + "_";
                   }
                 else {displayFileName1 = document.getElementById("filename").value;
                   }
@@ -618,9 +629,9 @@
             var nameOfProject = document.getElementById("projName").value;
             var date = ("0" + (timeStarted.getMonth()+1).toString()).slice(-2) + "-" + ("0" + timeStarted.getDate().toString()).slice(-2)  + "-" +
               timeStarted.getFullYear().toString().slice(-2);
-            //var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
-            //var dateTime = date+ "_" + time;
-            defaultFileName = nameOfProject + "_" + date;
+            // var time = ("0" + timeStarted.getHours()).slice(-2)  + "." +  ("0" + timeStarted.getMinutes()).slice(-2);
+            // var dateTime = date+ "_" + time;
+            defaultFileName = nameOfProject + "_";
             document.getElementById('filename').value = defaultFileName;
           }
           newFileName = String(document.getElementById('filename').value);
@@ -670,7 +681,7 @@
             fam: sendfam,
             cy5: sendcy5,
             hex: sendhex,
-            rt: sendrt,
+            rt: sendrt
           };
           ws.send(JSON.stringify(msg)); //sends message
       }
@@ -698,6 +709,12 @@
     // Needs to be implemented in the future with the run finish signal
     function finishRun() {
       runFinished = true;
+      document.getElementById('projName').disabled = false;
+      document.getElementById('opName').disabled = false;
+      document.getElementById('expName').disabled = false;
+      document.getElementById("dropdown").style.pointerEvents = "auto";
+      document.getElementById("dropdown").style.opacity = "1";
+      document.getElementById('filename').disabled = false;
       //Displays Finish Time
       var timeFinished = new Date(); //initialize Start Time
       timeFinishDisplay = timeFinished.toLocaleTimeString();
@@ -705,6 +722,10 @@
       timeFinishDisplay.bold() + "</span>";
       document.getElementById("esFin").innerHTML =  "<span style = 'text-decoration: underline;'> Finish Time:</span> " + " " +
       timeFinishDisplay;
+      document.getElementById('startStopPCR').innerHTML = "Start PCR";
+      document.getElementById('startStopPCR').style.backgroundColor = 'LimeGreen';
+      clientPressedStart = true;
+      runFinished = true;
 
       var msg = {
         id: "savefinish",
@@ -753,6 +774,9 @@
         if ((String(document.getElementById("configName").value).trim().length == 0)){
             alert("\nPlease fill out the Configuration Name");
             return false;}
+        else if ((String(document.getElementById("defProjName").value).trim().length == 0) && (String(document.getElementById("defEmail").value).trim().length == 0) && (String(document.getElementById("defOpName").value).trim().length == 0)){
+            alert("\nPlease fill out atleast one other input");
+            return false;}
         else if (namearray.includes(String(document.getElementById("configName").value.trim()))) {
             alert("\nThis configuration name already exists");
             return false;}
@@ -784,12 +808,13 @@
       }
 
       //opens a window prompt to confirm whether the user meant to close the website
-      function closeConfirmation() {
+      function closeConfirmation()
+      {
         let text = "\nAre you sure you want to close this website?\n\n If currently running, the machine will continue to run.\n\nPress 'OK' to confirm.";
         if (confirm(text) == true) {
           window.close();
         } else {}
-        }
+      }
 
       //opens a window prompt to confirm whether the user meant to shutdown the server.
       function shutdownConfirmation() {
@@ -840,7 +865,9 @@
               tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
         document.getElementById(contentid).style.display = "block";
-        evt.currentTarget.className += " active"; }
+        evt.currentTarget.className += " active";
+        pcr.resize();
+        cyc.resize();}
 
         document.getElementById("tab1").click(); //By Default, the first tab is shown.
 // Code for the tabs ends
